@@ -25,7 +25,7 @@ Path/URL" field, enter the file's SVN URL, for example,
 
     http://svn.myproject.com/repos/svnkit/trunk/myfile.php
 
-or a path to the file in you Subversion workspace, like
+or the path to the file in your Subversion workspace, like
 
     C:\svn\myproject\trunk\myfile.php
 
@@ -36,11 +36,11 @@ hit the Load button. You'll see a progress bar as the revisions are downloaded.
 Now comes the fun part. You can drag the slider at the top to scroll through all
 of the revisions of the file. Changes between each revision are highlighted in
 blue. As an alternative to the slider, you can click the left and right buttons
-in the corner.
+in the upper corner.
 
-The number of differences is indicated on the lower-right corner. There are up
+The number of differences is indicated in the lower-right corner. There are up
 and down arrows for moving from one difference to the next. Additionally, a
-search box is provided in the lower-right corner.
+search box is provided in the lower-left corner.
 
 
 LICENSING
@@ -81,5 +81,5 @@ FatJar (easy single-jar deployment): http://fjep.sourceforge.net/
 
 CONTACTS
 
-On all questions related to SVN Time-Lapse View please contact Jonathan Aquino
+For all questions related to SVN Time-Lapse View please contact Jonathan Aquino
 at jonathan.aquino@gmail.com
