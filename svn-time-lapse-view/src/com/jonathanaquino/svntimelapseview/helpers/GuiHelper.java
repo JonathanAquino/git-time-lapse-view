@@ -1,9 +1,17 @@
 package com.jonathanaquino.svntimelapseview.helpers;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import com.jonathanaquino.svntimelapseview.Closure;
 
 /**
  * GUI-related utility functions.
@@ -52,6 +60,57 @@ public class GuiHelper {
         } else {
             SwingUtilities.invokeAndWait(r);
         }
+    }
+    
+    /**
+     * Creates a file chooser that checks that the file chosen[ exists.
+     * @return
+     */
+    public static JFileChooser createJFileChooserWithExistenceChecking() {
+        return new JFileChooser() {
+            public void approveSelection() {
+                File[] files = selectedFiles(this);
+                if (files.length == 0) { return; }
+                for (int i = 0; i < files.length; i++) {
+                    if (!files[i].exists() && !files[i].isFile()) {
+                        return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+    }
+    
+    /**
+     * Returns the files that the user has selected.
+     * 
+     * @param chooser  the file dialog
+     */
+    public static File[] selectedFiles(JFileChooser chooser) {
+    	// Work around Java Bug 4437688 "JFileChooser.getSelectedFile() returns
+        // nothing when a file is selected"  [Jon Aquino 2007-10-15]
+        return ((chooser.getSelectedFiles().length == 0) && (chooser.getSelectedFile() != null)) 
+        		? new File[] { chooser.getSelectedFile() } : chooser.getSelectedFiles();
+    }
+    
+    /**
+     * Presses the given button if the user hits Enter in the text field.
+     * 
+     * @param textField  the text field in which to listen for the Enter key
+     * @param button  the button to push
+     * @return  the text field
+     */
+    public static JTextField pressOnEnterKey(JTextField textField, final JButton button) {
+    	textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MiscHelper.handleExceptions(new Closure() {
+					public void execute() throws Exception {
+						button.doClick();
+					}
+				});
+			}    		
+    	});
+    	return textField;
     }
 
 }

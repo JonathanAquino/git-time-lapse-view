@@ -29,8 +29,11 @@ import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
  */
 public class SvnLoader {
 	
-	/** Whether revisions are currently being downloaded */
+	/** Whether revisions are currently being downloaded. */
 	private volatile boolean loading = false;
+	
+	/** Whether the user has requested that the load be cancelled. */
+	private volatile boolean cancelled = false;
 
 	/** Number of revisions downloaded for the current file. */
 	private volatile int loadedCount = 0;
@@ -44,19 +47,20 @@ public class SvnLoader {
 	/**
 	 * Builds a list of revisions for the given file, using a thread.
 	 * 
-	 * @param url  URL of a file in the Subversion repository
+	 * @param filePathOrUrl  Subversion URL or working-copy file path
 	 * @param username  username, or null for anonymous
 	 * @param password  password, or null for anonymous
 	 * @param limit  maximum number of revisions to download
 	 * @param afterLoad  operation to run after the load finishes
 	 */
-	public void loadRevisions(final String url, final String username, final String password, final int limit, final Closure afterLoad) throws Exception {
+	public void loadRevisions(final String filePathOrUrl, final String username, final String password, final int limit, final Closure afterLoad) throws Exception {
 		loading = true;
+		cancelled = false;
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
 				MiscHelper.handleExceptions(new Closure() {
 					public void execute() throws Exception {
-						loadRevisionsProper(url, username, password, limit, afterLoad);
+						loadRevisionsProper(filePathOrUrl, username, password, limit, afterLoad);
 					}
 				});
 			}				
@@ -67,25 +71,26 @@ public class SvnLoader {
 	/**
 	 * Builds a list of revisions for the given file.
 	 * 
-	 * @param url  URL of a file in the Subversion repository
+	 * @param filePathOrUrl  Subversion URL or working-copy file path
 	 * @param username  username, or null for anonymous
 	 * @param password  password, or null for anonymous
 	 * @param limit  maximum number of revisions to download
 	 * @param afterLoad  operation to run after the load finishes
 	 */
-	private void loadRevisionsProper(String url, String username, String password, int limit, Closure afterLoad) throws SVNException, Exception {		
+	private void loadRevisionsProper(String filePathOrUrl, String username, String password, int limit, Closure afterLoad) throws SVNException, Exception {		
 		try {
 			loadedCount = totalCount = 0;
-			SVNURL svnUrl = svnUrl(url, username, password);
-			String urlProper = svnUrl.removePathTail().toString();
-			String filePath = svnUrl.getPath().replaceAll(".*/", "");
-			SVNRepository repository = repository(urlProper, username, password);
+			SVNURL fullUrl = svnUrl(filePathOrUrl, username, password);
+			String url = fullUrl.removePathTail().toString();
+			String filePath = fullUrl.getPath().replaceAll(".*/", "");
+			SVNRepository repository = repository(url, username, password);
 			List svnFileRevisions = new ArrayList(repository.getFileRevisions(filePath, null, 0, repository.getLatestRevision()));
 			List svnFileRevisionsToDownload = svnFileRevisions.subList(Math.max(0, svnFileRevisions.size() - limit), svnFileRevisions.size());
 			totalCount = svnFileRevisionsToDownload.size();
 			revisions = new ArrayList();
 			for (Iterator i = svnFileRevisionsToDownload.iterator(); i.hasNext(); ) {
-				SVNFileRevision r = (SVNFileRevision) i.next();			
+				SVNFileRevision r = (SVNFileRevision) i.next();
+				if (cancelled) { break; }
 				Map p = r.getRevisionProperties();
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				repository.getFile(r.getPath(), r.getRevision(), null, outputStream);
@@ -178,6 +183,13 @@ public class SvnLoader {
 	 */
 	public List getRevisions() {
 		return revisions;
+	}
+	
+	/**
+	 * Requests that the load be cancelled.
+	 */
+	public void cancel() {
+		cancelled = true;
 	}
 	
 }

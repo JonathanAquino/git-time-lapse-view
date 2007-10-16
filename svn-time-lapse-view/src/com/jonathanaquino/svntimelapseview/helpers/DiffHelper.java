@@ -46,22 +46,50 @@ public class DiffHelper {
 		StringBuffer rightText = new StringBuffer();
 		StringBuffer leftHtml = new StringBuffer();		
 		StringBuffer rightHtml = new StringBuffer();
+		List leftLines = new ArrayList();
+		List rightLines = new ArrayList();
 		int lineNumberWidth = String.valueOf(leftLineNumbers.size()).length() + 1;
 		for (int i = 0; i < leftLineNumbers.size(); i++) {
 			String leftLineNumber = leftLineNumbers.get(i).toString();
 			String rightLineNumber = rightLineNumbers.get(i).toString();
 			String leftLine = leftLineNumber.length() == 0 ? "" : leftFileLines[Integer.parseInt(leftLineNumber)-1];
 			String rightLine = rightLineNumber.length() == 0 ? "" : rightFileLines[Integer.parseInt(rightLineNumber)-1];
+			leftLines.add(leftLine);
+			rightLines.add(rightLine);
 			leftText.append(StringUtils.rightPad(leftLineNumber, lineNumberWidth)).append(leftLine).append('\n');
 			rightText.append(StringUtils.rightPad(rightLineNumber, lineNumberWidth)).append(rightLine).append('\n');
-			String[] html = html(leftLineNumber, rightLineNumber, leftLine, rightLine); 
-			leftHtml.append(StringUtils.rightPad(leftLineNumber, lineNumberWidth)).append(html[0]);
-			rightHtml.append(StringUtils.rightPad(rightLineNumber, lineNumberWidth)).append(html[1]);
+			String[] html = html(leftLineNumber, rightLineNumber, leftLine, rightLine);
+			// Make sure the anchor tag is not empty; otherwise the Highlight offsets seem to get messed up [Jon Aquino 2007-10-16]
+			leftHtml.append("<a name='Position" + i + "'>").append(StringUtils.rightPad(leftLineNumber, lineNumberWidth)).append("</a>").append(html[0]).append('\n');;
+			rightHtml.append("<a name='Position" + i + "'>").append(StringUtils.rightPad(rightLineNumber, lineNumberWidth)).append("</a>").append(html[1]).append('\n');;
 			
 		}
-		return new Diff("<pre>" + leftHtml + "</pre>", "<pre>" + rightHtml + "</pre>", leftText.toString(), rightText.toString());
+		return new Diff("<pre>" + leftHtml + "</pre>", "<pre>" + rightHtml + "</pre>", leftText.toString(), rightText.toString(), differencePositions(leftLines, rightLines));
 	}
 	
+	/**
+	 * Returns the zero-based line numbers at which differences start.
+	 * 
+	 * @param leftLines  text for the left side of the diff
+	 * @param rightLines  text for the right side of the diff
+	 * @return  0 for the first line, 1 for the 2nd, etc.
+	 */
+	private static List differencePositions(List leftLines, List rightLines) {
+		List differencePositions = new ArrayList();
+		boolean insideDifference = false;
+		for (int i = 0; i < leftLines.size(); i++) {
+			if (leftLines.get(i).equals(rightLines.get(i))) {
+				insideDifference = false;
+				continue; 
+			}
+			if (! insideDifference) {
+				insideDifference = true;
+				differencePositions.add(new Integer(i));
+			}
+		}
+		return differencePositions;
+	}
+
 	/**
 	 * Returns HTML for the two lines
 	 * 
@@ -83,7 +111,7 @@ public class DiffHelper {
 			leftOpeningTag = rightOpeningTag = "<span style='background-color: #A6CAF0'>";
 			leftClosingTag = rightClosingTag = "</span>";			
 		}
-		return new String[] { leftOpeningTag + StringEscapeUtils.escapeHtml(leftLine) + leftClosingTag + "\n", rightOpeningTag + StringEscapeUtils.escapeHtml(rightLine) + rightClosingTag + "\n" };
+		return new String[] { leftOpeningTag + StringEscapeUtils.escapeHtml(leftLine) + leftClosingTag, rightOpeningTag + StringEscapeUtils.escapeHtml(rightLine) + rightClosingTag };
 	}
 
 	/**
