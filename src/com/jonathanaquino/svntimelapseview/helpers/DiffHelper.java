@@ -18,7 +18,7 @@ public class DiffHelper {
 
 	/**
 	 * Returns a diff of two text files
-	 * 
+	 *
 	 * @param leftFileContents  the contents of the first file
 	 * @param rightFileContents  the contents of the second file
 	 * @return  the lines that differ
@@ -42,9 +42,9 @@ public class DiffHelper {
 			if (rightExtraLineCount > 0) { leftLineNumbers.subList(leftEnd, leftEnd).addAll(Collections.nCopies(rightExtraLineCount, "")); }
 		}
 		if (leftLineNumbers.size() != rightLineNumbers.size()) { throw new RuntimeException("Assertion failed: " + leftLineNumbers.size() + " != " + rightLineNumbers.size()); }
-		StringBuffer leftText = new StringBuffer();		
+		StringBuffer leftText = new StringBuffer();
 		StringBuffer rightText = new StringBuffer();
-		StringBuffer leftHtml = new StringBuffer();		
+		StringBuffer leftHtml = new StringBuffer();
 		StringBuffer rightHtml = new StringBuffer();
 		List leftLines = new ArrayList();
 		List rightLines = new ArrayList();
@@ -58,29 +58,31 @@ public class DiffHelper {
 			rightLines.add(rightLine);
 			leftText.append(StringUtils.rightPad(leftLineNumber, lineNumberWidth)).append(leftLine).append('\n');
 			rightText.append(StringUtils.rightPad(rightLineNumber, lineNumberWidth)).append(rightLine).append('\n');
-			String[] html = html(leftLineNumber, rightLineNumber, leftLine, rightLine);
+			String[] html = html(leftLineNumber, rightLineNumber, leftLine, rightLine, i, lineNumberWidth);
 			// Make sure the anchor tag is not empty; otherwise the Highlight offsets seem to get messed up [Jon Aquino 2007-10-16]
-			leftHtml.append("<a name='Position" + i + "'>").append(StringUtils.rightPad(leftLineNumber, lineNumberWidth)).append("</a>").append(html[0]).append('\n');;
-			rightHtml.append("<a name='Position" + i + "'>").append(StringUtils.rightPad(rightLineNumber, lineNumberWidth)).append("</a>").append(html[1]).append('\n');;
-			
+			leftHtml.append(html[0]).append('\n');
+			rightHtml.append(html[1]).append('\n');
+
 		}
-		return new Diff("<pre>" + leftHtml + "</pre>", "<pre>" + rightHtml + "</pre>", leftText.toString(), rightText.toString(), differencePositions(leftLines, rightLines));
+		return new Diff("<pre>" + leftHtml + "</pre>", "<pre>" + rightHtml + "</pre>", leftText.toString(), rightText.toString(), differencePositions(leftLines, rightLines, leftLineNumbers, rightLineNumbers));
 	}
-	
+
 	/**
 	 * Returns the zero-based line numbers at which differences start.
-	 * 
+	 *
 	 * @param leftLines  text for the left side of the diff
 	 * @param rightLines  text for the right side of the diff
+	 * @param leftLineNumbers  line number strings, or empty strings where lines are missing
+	 * @param rightLineNumbers  line number strings, or empty strings where lines are missing
 	 * @return  0 for the first line, 1 for the 2nd, etc.
 	 */
-	private static List differencePositions(List leftLines, List rightLines) {
+	private static List differencePositions(List leftLines, List rightLines, List leftLineNumbers, List rightLineNumbers) {
 		List differencePositions = new ArrayList();
 		boolean insideDifference = false;
 		for (int i = 0; i < leftLines.size(); i++) {
-			if (leftLines.get(i).equals(rightLines.get(i))) {
+			if (leftLines.get(i).equals(rightLines.get(i)) && (leftLineNumbers.get(i).toString().length() > 0 == rightLineNumbers.get(i).toString().length() > 0)) {
 				insideDifference = false;
-				continue; 
+				continue;
 			}
 			if (! insideDifference) {
 				insideDifference = true;
@@ -92,31 +94,35 @@ public class DiffHelper {
 
 	/**
 	 * Returns HTML for the two lines
-	 * 
+	 *
 	 * @param leftLineNumber  line number for the left line, or an empty string if it does not exist
-	 * @param rightLineNumber line number for the right line, or an empty string if it does not exist 
+	 * @param rightLineNumber line number for the right line, or an empty string if it does not exist
 	 * @param leftLine  the left line
 	 * @param rightLine  the right line
+	 * @param position  the zero-based vertical position of the two lines
+	 * @param lineNumberWidth  the number of characters to pad the line numbers up to
 	 * @return  two HTML strings
 	 */
-	private static String[] html(String leftLineNumber, String rightLineNumber, String leftLine, String rightLine) {
+	private static String[] html(String leftLineNumber, String rightLineNumber, String leftLine, String rightLine, int position, int lineNumberWidth) {
 		String leftOpeningTag = "", leftClosingTag = "", rightOpeningTag = "", rightClosingTag = "";
-		if (leftLineNumber.length() == 0) { 
+		if (leftLineNumber.length() == 0) {
 			rightOpeningTag = "<span style='background-color: #A6CAF0'>";
 			rightClosingTag = "</span>";
-		} else if (rightLineNumber.length() == 0) {  
+		} else if (rightLineNumber.length() == 0) {
 			leftOpeningTag = "<span style='background-color: #A6CAF0'>";
 			leftClosingTag = "</span>";
 		} else if (! leftLine.equals(rightLine)) {
 			leftOpeningTag = rightOpeningTag = "<span style='background-color: #A6CAF0'>";
-			leftClosingTag = rightClosingTag = "</span>";			
+			leftClosingTag = rightClosingTag = "</span>";
 		}
-		return new String[] { leftOpeningTag + StringEscapeUtils.escapeHtml(leftLine) + leftClosingTag, rightOpeningTag + StringEscapeUtils.escapeHtml(rightLine) + rightClosingTag };
+		return new String[] { 
+				leftOpeningTag + "<a name='Position" + position + "'>" + StringUtils.rightPad(leftLineNumber, lineNumberWidth) + "</a>" + StringEscapeUtils.escapeHtml(leftLine) + leftClosingTag, 
+				rightOpeningTag + "<a name='Position" + position + "'>" + StringUtils.rightPad(rightLineNumber, lineNumberWidth) + "</a>" + StringEscapeUtils.escapeHtml(rightLine) + rightClosingTag };
 	}
 
 	/**
 	 * Line numbers for the file
-	 * 
+	 *
 	 * @param lines  the lines of the text file
 	 * @return  an array of line-number strings
 	 */
@@ -130,12 +136,12 @@ public class DiffHelper {
 
 	/**
 	 * Splits the string at \r, \n, or \r\n.
-	 * 
+	 *
 	 * @param fileContents  the contents of a text file
 	 * @return  the lines of the text file
 	 */
 	protected static String[] split(String fileContents) {
 		return fileContents.split("\r\n|\r|\n");
-	}	
-	
+	}
+
 }

@@ -7,29 +7,29 @@ public class Searcher {
 
 	/** The text of the left revision. */
 	private String leftText;
-	
+
 	/** The text of the right revision. */
 	private String rightText;
-	
+
 	/** The position at which to begin the next search. */
 	private int pointer = 0;
-	
+
 	/**
 	 * Whether the search result is on the left revision or the right.
 	 */
 	public static class Side {
 		private Side() { }
 	}
-		
+
 	/** The left revision */
     public static final Side LEFT = new Side();
-    
+
     /** The right revision */
-    public static final Side RIGHT = new Side();    
+    public static final Side RIGHT = new Side();
 
 	/**
 	 * Creates a new Searcher.
-	 * 
+	 *
 	 * @param leftText  the text of the left revision
 	 * @param rightText  the text of the right revision
 	 */
@@ -37,10 +37,10 @@ public class Searcher {
 		this.leftText = leftText;
 		this.rightText = rightText;
 	}
-	
+
 	/**
 	 * Searches for the given text.
-	 * 
+	 *
 	 * @param s  the text to search for
 	 * @return  whether the text was found
 	 */
@@ -61,10 +61,10 @@ public class Searcher {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns the revision of the last search.
-	 * 
+	 *
 	 * @return  whether the search result is on the left revision or the right
 	 */
 	public Side getSide() {
@@ -73,17 +73,17 @@ public class Searcher {
 		if (position < leftText.length()) { return LEFT; }
 		return RIGHT;
 	}
-	
+
 	/**
 	 * Returns the zero-based position of the last search.
-	 * 
+	 *
 	 * @return  the index of the search result within its revision (left or right)
 	 */
 	public int getPosition() {
 		int position = pointer - 1;
 		if (position == -1) { return rightText.length() - 1; }
 		if (position < leftText.length()) { return position; }
-		return position - leftText.length();		
+		return position - leftText.length();
 	}
-	
+
 }

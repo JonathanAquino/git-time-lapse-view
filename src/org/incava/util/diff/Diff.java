@@ -1,6 +1,14 @@
 package org.incava.util.diff;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -118,7 +126,7 @@ public class Diff
         int ai;
 
         int lastMatch = matches.length - 1;
-        
+
         for (ai = 0; ai <= lastMatch; ++ai) {
             Integer bLine = matches[ai];
 
@@ -257,7 +265,7 @@ public class Diff
     {
         return comparator == null ? x.equals(y) : comparator.compare(x, y) == 0;
     }
-    
+
     /**
      * Returns an array of the longest common subsequences.
      */
@@ -328,7 +336,7 @@ public class Diff
                     else {
                         Object value = k.intValue() > 0 ? links.get(new Integer(k.intValue() - 1)) : null;
                         links.put(k, new Object[] { value, new Integer(i), j });
-                    }   
+                    }
                 }
             }
         }
@@ -344,7 +352,7 @@ public class Diff
             }
         }
 
-        return toArray(matches);        
+        return toArray(matches);
     }
 
     /**
@@ -355,7 +363,7 @@ public class Diff
         int       size = map.size() == 0 ? 0 : 1 + ((Integer)map.lastKey()).intValue();
         Integer[] ary  = new Integer[size];
         Iterator  it   = map.keySet().iterator();
-        
+
         while (it.hasNext()) {
             Integer idx = (Integer)it.next();
             Integer val = (Integer)map.get(idx);
@@ -427,7 +435,7 @@ public class Diff
         }
         else {
             int hi = -1;
-            
+
             if (isNonzero(k)) {
                 hi = k.intValue();
             }
@@ -443,7 +451,7 @@ public class Diff
             else {
                 // binary search for insertion point:
                 int lo = 0;
-        
+
                 while (lo <= hi) {
                     int     index = (hi + lo) / 2;
                     Integer val   = (Integer)thresh.get(new Integer(index));
@@ -459,7 +467,7 @@ public class Diff
                         hi = index - 1;
                     }
                 }
-        
+
                 thresh.put(new Integer(lo), j);
                 k = new Integer(lo);
             }

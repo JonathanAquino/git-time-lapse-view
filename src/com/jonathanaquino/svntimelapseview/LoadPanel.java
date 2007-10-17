@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -18,9 +17,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import com.jonathanaquino.svntimelapseview.ApplicationWindow;
-import com.jonathanaquino.svntimelapseview.Closure;
-import com.jonathanaquino.svntimelapseview.Configuration;
 import com.jonathanaquino.svntimelapseview.helpers.GuiHelper;
 import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
 

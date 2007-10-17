@@ -9,19 +9,19 @@ public class Diff {
 
 	/** HTML for the left side of the diff */
 	private String leftHtml;
-	
+
 	/** HTML for the right side of the diff */
 	private String rightHtml;
-	
+
 	/** Text for the left side of the diff */
 	private String leftText;
-	
+
 	/** Text for the right side of the diff */
 	private String rightText;
-	
+
 	/** Zero-based line numbers at which differences start. */
 	private List differencePositions;
-	
+
 	/**
 	 * Creates a new Diff.
 	 *
@@ -37,10 +37,10 @@ public class Diff {
 		this.rightText = rightText;
 		this.differencePositions = differencePositions;
 	}
-	
+
 	/**
 	 * Returns the HTML for the left side of the diff.
-	 * 
+	 *
 	 * @return  the plain-HTML version, used by the unit tests
 	 */
 	public String getLeftHtml() {
@@ -49,7 +49,7 @@ public class Diff {
 
 	/**
 	 * Returns the HTML for the right side of the diff.
-	 * 
+	 *
 	 * @return  the plain-HTML version, used by the unit tests
 	 */
 	public String getRightHtml() {
@@ -58,7 +58,7 @@ public class Diff {
 
 	/**
 	 * Returns the text for the left side of the diff.
-	 * 
+	 *
 	 * @return  the plain-text version, used by the unit tests
 	 */
 	public String getLeftText() {
@@ -67,21 +67,21 @@ public class Diff {
 
 	/**
 	 * Returns the text for the right side of the diff.
-	 * 
+	 *
 	 * @return  the plain-text version, used by the unit tests
 	 */
 	public String getRightText() {
 		return rightText;
 	}
-	
+
 	/**
 	 * Returns the zero-based line numbers at which differences start.
-	 * 
+	 *
 	 * @return  0 for the first line, 3 for the fourth, etc.
 	 */
 	public List getDifferencePositions() {
 		return differencePositions;
 	}
-	
-	
+
+
 }

@@ -3,6 +3,7 @@ package com.jonathanaquino.svntimelapseview.helpers;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
 import javax.swing.Timer;
 
 import com.jonathanaquino.svntimelapseview.Closure;

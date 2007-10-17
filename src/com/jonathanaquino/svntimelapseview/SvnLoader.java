@@ -18,7 +18,6 @@ import org.tmatesoft.svn.core.io.SVNFileRevision;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
-import org.tmatesoft.svn.core.wc.SVNInfo;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
@@ -29,25 +28,25 @@ import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
  * Loads revisions from a subversion repository.
  */
 public class SvnLoader {
-	
+
 	/** Whether revisions are currently being downloaded. */
 	private volatile boolean loading = false;
-	
+
 	/** Whether the user has requested that the load be cancelled. */
 	private volatile boolean cancelled = false;
 
 	/** Number of revisions downloaded for the current file. */
 	private volatile int loadedCount = 0;
-	
+
 	/** Total number of revisions to download for the current file. */
 	private volatile int totalCount = 0;
-	
+
 	/** The list of Revisions being downloaded. */
 	private List revisions;
-	
+
 	/**
 	 * Builds a list of revisions for the given file, using a thread.
-	 * 
+	 *
 	 * @param filePathOrUrl  Subversion URL or working-copy file path
 	 * @param username  username, or null for anonymous
 	 * @param password  password, or null for anonymous
@@ -64,21 +63,21 @@ public class SvnLoader {
 						loadRevisionsProper(filePathOrUrl, username, password, limit, afterLoad);
 					}
 				});
-			}				
-		});			
+			}
+		});
 		thread.start();
 	}
 
 	/**
 	 * Builds a list of revisions for the given file.
-	 * 
+	 *
 	 * @param filePathOrUrl  Subversion URL or working-copy file path
 	 * @param username  username, or null for anonymous
 	 * @param password  password, or null for anonymous
 	 * @param limit  maximum number of revisions to download
 	 * @param afterLoad  operation to run after the load finishes
 	 */
-	private void loadRevisionsProper(String filePathOrUrl, String username, String password, int limit, Closure afterLoad) throws SVNException, Exception {		
+	private void loadRevisionsProper(String filePathOrUrl, String username, String password, int limit, Closure afterLoad) throws SVNException, Exception {
 		try {
 			loadedCount = totalCount = 0;
 			SVNURL fullUrl = svnUrl(filePathOrUrl, username, password);
@@ -99,6 +98,7 @@ public class SvnLoader {
 				revisions.add(new Revision(r.getRevision(), (String) p.get(SVNRevisionProperty.AUTHOR), formatDate((String) p.get(SVNRevisionProperty.DATE)), (String) p.get(SVNRevisionProperty.LOG), outputStream.toString()));
 				loadedCount++;
 			}
+			Collections.reverse(revisions);
 			afterLoad.execute();
 		} finally {
 			loading = false;
@@ -107,7 +107,7 @@ public class SvnLoader {
 
 	/**
 	 * Normalizes the given file path or URL.
-	 * 
+	 *
 	 * @param filePathOrUrl  Subversion URL or working-copy file path
 	 * @param username  username, or null for anonymous
 	 * @param password  password, or null for anonymous
@@ -123,10 +123,10 @@ public class SvnLoader {
 		}
 		return svnUrl;
 	}
-	
+
 	/**
 	 * Formats the value of the date property
-	 * 
+	 *
 	 * @param date  the revision date
 	 * @return a friendlier date string
 	 */
@@ -136,7 +136,7 @@ public class SvnLoader {
 
 	/**
 	 * Returns the specified Subversion repository
-	 * 
+	 *
 	 * @param url  URL of the Subversion repository or one of its files
 	 * @param username  username, or null for anonymous
 	 * @param password  password, or null for anonymous
@@ -153,7 +153,7 @@ public class SvnLoader {
 
 	/**
 	 * Returns whether revisions are currently being downloaded.
-	 * 
+	 *
 	 * @return  whether the SvnLoader is loading revisions
 	 */
 	public boolean isLoading() {
@@ -162,7 +162,7 @@ public class SvnLoader {
 
 	/**
 	 * Returns the number of revisions downloaded so far.
-	 * 
+	 *
 	 * @return  the number of revisions loaded in the current job.
 	 */
 	public int getLoadedCount() {
@@ -171,27 +171,27 @@ public class SvnLoader {
 
 	/**
 	 * Returns the total number of revisions that the current job is downloading.
-	 * 
+	 *
 	 * @return  the number of revisions being downloaded.
 	 */
 	public int getTotalCount() {
 		return totalCount;
 	}
-	
+
 	/**
 	 * Returns the Revisions for the file being examined.
-	 * 
+	 *
 	 * @return  the file's revision history
 	 */
 	public List getRevisions() {
 		return revisions;
 	}
-	
+
 	/**
 	 * Requests that the load be cancelled.
 	 */
 	public void cancel() {
 		cancelled = true;
 	}
-	
+
 }

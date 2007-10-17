@@ -7,16 +7,16 @@ public class Revision {
 
 	/** The number identifying this revision */
 	private long revisionNumber;
-	
+
 	/** The username of the person who submitted this revision */
 	private String author;
-	
+
 	/** The date on which the revision was submitted */
 	private String date;
-	
+
 	/** The log message accompanying the submission of this revision */
 	private String logMessage;
-	
+
 	/** The contents of the file that was submitted */
 	private String contents;
 
@@ -30,7 +30,7 @@ public class Revision {
 
 	/**
 	 * Returns the number identifying this revision.
-	 * 
+	 *
 	 * @return the value from Subversion
 	 */
 	public long getRevisionNumber() {
@@ -39,16 +39,16 @@ public class Revision {
 
 	/**
 	 * Returns the username of the person who submitted this revision.
-	 * 
+	 *
 	 * @return the value from Subversion
 	 */
 	public String getAuthor() {
 		return author;
 	}
-	
+
 	/**
 	 * Returns the date on which the revision was submitted.
-	 * 
+	 *
 	 * @return the value from Subversion
 	 */
 	public String getDate() {
@@ -57,7 +57,7 @@ public class Revision {
 
 	/**
 	 * Returns the log message accompanying the submission of this revision.
-	 * 
+	 *
 	 * @return the value from Subversion
 	 */
 	public String getLogMessage() {
@@ -66,11 +66,11 @@ public class Revision {
 
 	/**
 	 * Returns the contents of the file that was submitted.
-	 * 
+	 *
 	 * @return the value from Subversion
 	 */
 	public String getContents() {
 		return contents;
-	} 
-	
+	}
+
 }

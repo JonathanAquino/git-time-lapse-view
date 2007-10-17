@@ -9,5 +9,5 @@ public interface Closure {
 	 * Calls the closure with no arguments
 	 */
     public void execute() throws Exception;
-	
+
 }

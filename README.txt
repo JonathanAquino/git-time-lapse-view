@@ -36,11 +36,14 @@ hit the Load button. You'll see a progress bar as the revisions are downloaded.
 Now comes the fun part. You can drag the slider at the top to scroll through all
 of the revisions of the file. Changes between each revision are highlighted in
 blue. As an alternative to the slider, you can click the left and right buttons
-in the upper corner.
+in the upper-right corner.
 
 The number of differences is indicated in the lower-right corner. There are up
 and down arrows for moving from one difference to the next. Additionally, a
 search box is provided in the lower-left corner.
+
+You can also control the four arrow buttons using Alt+Left, Alt+Right, Alt+Up,
+and Alt+Down.
 
 
 LICENSING

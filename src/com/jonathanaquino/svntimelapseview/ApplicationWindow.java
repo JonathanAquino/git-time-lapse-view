@@ -14,11 +14,10 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -37,8 +36,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 
-import org.apache.commons.lang.time.DateUtils;
-
 import com.jonathanaquino.svntimelapseview.Searcher.Side;
 import com.jonathanaquino.svntimelapseview.helpers.GuiHelper;
 import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
@@ -47,62 +44,62 @@ import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
  * The main window of the program.
  */
 public class ApplicationWindow extends JFrame {
-	
+
 	/** The top-level object in the program */
 	private Application application;
-	
+
 	/** The slider that controls the current revision */
 	private JSlider slider = new JSlider(1, 30);
-	
+
 	/** The text area showing details for the left file. */
 	private JTextArea leftMetadataTextArea = new JTextArea();
-	
+
 	/** The text area showing details for the right file. */
 	private JTextArea rightMetadataTextArea = new JTextArea();
-	
+
 	/** The editor pane displaying the contents of the left file. */
 	private JEditorPane leftEditorPane = new JEditorPane();
-	
+
 	/** The editor pane displaying the contents of the right file. */
 	private JEditorPane rightEditorPane = new JEditorPane();
-	
+
 	/** The panel containing the slider and slider buttons. */
 	private JPanel sliderPanel = new JPanel(new GridBagLayout());
-	
+
 	/** The bar at the bottom of the application window. */
 	private SearchPanel searchPanel;
 
 	/** The value of the horizontal scroll bars on the editor panes. */
 	private int horizontalScrollBarValue = 0;
-	
+
 	/** The value of the vertical scroll bars on the editor panes. */
 	private int verticalScrollBarValue = 0;
-	
+
 	/** Number of freeze requests for the horizontal scroll bars */
 	private int horizontalScrollBarLocks = 0;
-	
+
 	/** Number of freeze requests for the vertical scroll bars */
 	private int verticalScrollBarLocks = 0;
-	
-	
+
+
 	/**
 	 * Creates a new ViewerFrame.
-	 * 
+	 *
 	 * @param application  the top-level object in the program.
 	 * @param filePathOrUrl  Subversion URL or working-copy file path
 	 * @param username  username, or an empty string for anonymous
-	 * @param password  password, or an empty string for anonymous 
+	 * @param password  password, or an empty string for anonymous
 	 * @param limit  maximum number of revisions to download
 	 */
 	public ApplicationWindow(Application application, final String filePathOrUrl, final String username, final String password, final int limit) throws Exception {
 		this.application = application;
-		initialize();		
+		initialize();
 		addComponentListener(new ComponentAdapter() {
 			public void componentShown(ComponentEvent e) {
 				MiscHelper.handleExceptions(new Closure() {
 					public void execute() throws Exception {
 						if (filePathOrUrl != null) { load(filePathOrUrl, username, password, limit); }
-					}					
+					}
 				});
 			}
 		});
@@ -114,21 +111,21 @@ public class ApplicationWindow extends JFrame {
 	private void initialize() throws Exception {
 		setTitle("SVN Time-Lapse View");
 		initializeWindowPosition();
-		getContentPane().setLayout(new BorderLayout());		
+		getContentPane().setLayout(new BorderLayout());
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) { System.exit(0); }
-		});	
-		initializeSlider();		
-		JPanel editorPanePanel = new JPanel(new GridLayout(0, 2));		
+		});
+		initializeSlider();
+		JPanel editorPanePanel = new JPanel(new GridLayout(0, 2));
 		initializeEditorPane(leftEditorPane, 0, editorPanePanel);
 		initializeEditorPane(rightEditorPane, 1, editorPanePanel);
 		JPanel metadataPanel = new JPanel(new GridLayout(0, 2));
 		initializeMetadataTextArea(leftMetadataTextArea, 0, metadataPanel);
 		initializeMetadataTextArea(rightMetadataTextArea, 1, metadataPanel);
-		JPanel innerPanel = new JPanel(new BorderLayout());		
+		JPanel innerPanel = new JPanel(new BorderLayout());
 		add(sliderPanel, BorderLayout.NORTH);
 		add(innerPanel, BorderLayout.CENTER);
-		innerPanel.add(new LoadPanel(this), BorderLayout.NORTH);	
+		innerPanel.add(new LoadPanel(this), BorderLayout.NORTH);
 		innerPanel.add(editorPanePanel, BorderLayout.CENTER);
 		innerPanel.add(metadataPanel, BorderLayout.SOUTH);
 		searchPanel = new SearchPanel(this);
@@ -144,25 +141,25 @@ public class ApplicationWindow extends JFrame {
 				MiscHelper.handleExceptions(new Closure() {
 					public void execute() throws Exception {
 						setCurrentRevisionIndex(slider.getValue());
-					}			
+					}
 				});
-			}			
-		});		
+			}
+		});
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-			    changeRevisionTimer.restart();	
-			}			
+			    changeRevisionTimer.restart();
+			}
 		});
 		slider.setSnapToTicks(true);
 		slider.setMinorTickSpacing(1);
 		sliderPanel.add(new JLabel("Revisions:"), new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 0), 0, 0));
 		sliderPanel.add(slider, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		JButton previousButton = new JButton("\u25C4");
-		JButton nextButton = new JButton("\u25BA");
+		JButton previousButton = GuiHelper.setShortcutKey(new JButton("\u25C4"), KeyEvent.VK_LEFT, InputEvent.ALT_MASK);
+		JButton nextButton = GuiHelper.setShortcutKey(new JButton("\u25BA"), KeyEvent.VK_RIGHT, InputEvent.ALT_MASK);
 		previousButton.setMargin(new Insets(0, 4, 0, 4));
 		nextButton.setMargin(new Insets(0, 4, 0, 4));
-		previousButton.setToolTipText("Previous Revision");
-		nextButton.setToolTipText("Next Revision");
+		previousButton.setToolTipText("Previous Revision (Alt+\u21E6)");
+		nextButton.setToolTipText("Next Revision (Alt+\u21E8)");
 		previousButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MiscHelper.handleExceptions(new Closure() {
@@ -188,7 +185,7 @@ public class ApplicationWindow extends JFrame {
 
 	/**
 	 * Sets up one of the editor panes showing the contents of the file.
-	 * 
+	 *
 	 * @param editorPane  the editor pane to initialize
 	 * @param x  0 or 1 for left or right
 	 * @param parentPanel  the panel to which to add the editor pane
@@ -207,11 +204,11 @@ public class ApplicationWindow extends JFrame {
 						freezeHorizontalScrollBarsDuring(new Closure() {
 							public void execute() throws Exception {
 								updateScrollBars();
-							}			
+							}
 						});
-					}			
+					}
 				});
-			}        	
+			}
 	    });
 	    scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(final AdjustmentEvent e) {
@@ -221,11 +218,11 @@ public class ApplicationWindow extends JFrame {
 						freezeVerticalScrollBarsDuring(new Closure() {
 							public void execute() throws Exception {
 								updateScrollBars();
-							}			
+							}
 						});
-					}			
+					}
 				});
-			}        	
+			}
 	    });
 	}
 
@@ -245,7 +242,7 @@ public class ApplicationWindow extends JFrame {
 						if (GuiHelper.maximized(ApplicationWindow.this)) { return; }
 						configuration.setInt("x", getLocation().x);
 						configuration.setInt("y", getLocation().y);
-					}					
+					}
 				});
 			}
 			public void componentResized(ComponentEvent e) {
@@ -259,8 +256,8 @@ public class ApplicationWindow extends JFrame {
 						configuration.setBoolean("maximized", false);
 						configuration.setInt("width", getWidth());
 						configuration.setInt("height", getHeight());
-						
-					}					
+
+					}
 				});
 			}
 		});
@@ -268,7 +265,7 @@ public class ApplicationWindow extends JFrame {
 
 	/**
 	 * Sets up one of the text areas showing file details.
-	 * 
+	 *
 	 * @param metadataTextArea  the text area to initialize
 	 * @param x  0 or 1 for left or right
 	 * @param parentPanel  the panel to which to add the text area
@@ -279,12 +276,12 @@ public class ApplicationWindow extends JFrame {
 		metadataTextArea.setLineWrap(true);
 		JScrollPane scrollPane = new JScrollPane(metadataTextArea);
 		scrollPane.setPreferredSize(new Dimension(100, 100));
-		parentPanel.add(scrollPane);		
+		parentPanel.add(scrollPane);
 	}
 
 	/**
 	 * Loads the revisions for the specified file.
-	 * 
+	 *
 	 * @param filePathOrUrl  Subversion URL or working-copy file path
 	 * @param username  username, or an empty string for anonymous
 	 * @param password  password, or an empty string for anonymous
@@ -310,15 +307,15 @@ public class ApplicationWindow extends JFrame {
 								setCurrentRevisionIndex(slider.getMaximum());
 							}
 						});
-					}					
+					}
 				});
-			}			
+			}
 		});
 	}
 
 	/**
 	 * Displays the n-1th and nth revisions.
-	 * 
+	 *
 	 * @param n  the index of the revision to display
 	 */
 	private void setCurrentRevisionIndex(int n) throws Exception {
@@ -334,7 +331,7 @@ public class ApplicationWindow extends JFrame {
 
 	/**
 	 * Populates the editor pane with the contents of the revision.
-	 * 
+	 *
 	 * @param editorPanel  the editor pane to update
 	 * @param html  the revision to display in the editor pane
 	 */
@@ -344,16 +341,16 @@ public class ApplicationWindow extends JFrame {
 			public void execute() throws Exception {
 				freezeVerticalScrollBarsDuring(new Closure() {
 					public void execute() throws Exception {
-						updateScrollBars();			
+						updateScrollBars();
 					}
 				});
 			}
 		});
 	}
-	
+
 	/**
 	 * Populates the text area with metadata from the revision.
-	 * 
+	 *
 	 * @param metadataTextArea  the text area to update
 	 * @param revision  the revision to display
 	 */
@@ -369,7 +366,7 @@ public class ApplicationWindow extends JFrame {
 	 * Ensures that the horizontal scroll bar does not move during the operation.
 	 * Horizontal and vertical scroll bars are tracked independently because operations
 	 * like search may move both of them at once.
-	 * 
+	 *
 	 * @param closure  the operation to execute
 	 */
 	private void freezeHorizontalScrollBarsDuring(Closure closure) throws Exception {
@@ -383,15 +380,15 @@ public class ApplicationWindow extends JFrame {
 				public void run() {
 					horizontalScrollBarLocks--;
 				}
-            });			
+            });
 		}
 	}
-	
+
 	/**
 	 * Ensures that the horizontal scroll bar does not move during the operation.
 	 * Horizontal and vertical scroll bars are tracked independently because operations
 	 * like search may move both of them at once.
-	 * 
+	 *
 	 * @param closure  the operation to execute
 	 */
 	private void freezeVerticalScrollBarsDuring(Closure closure) throws Exception {
@@ -405,30 +402,30 @@ public class ApplicationWindow extends JFrame {
 				public void run() {
 					verticalScrollBarLocks--;
 				}
-            });			
+            });
 		}
 	}
 
 	/**
 	 * Sets the value of the horizontal scroll bars on editor panes.
-	 * 
+	 *
 	 * @param horizontalScrollBarValue  the new value
 	 */
 	private void setHorizontalScrollBarValue(int horizontalScrollBarValue) {
 		if (horizontalScrollBarLocks > 0) { return; }
 		this.horizontalScrollBarValue = horizontalScrollBarValue;
 	}
-	
+
 	/**
 	 * Sets the value of the vertical scroll bars on editor panes.
-	 * 
+	 *
 	 * @param verticalScrollBarValue  the new value
 	 */
 	private void setVerticalScrollBarValue(int verticalScrollBarValue) {
 		if (verticalScrollBarLocks > 0) { return; }
 		this.verticalScrollBarValue = verticalScrollBarValue;
 	}
-	
+
 	/**
 	 * Updates the positions of the scrollbars for the editor panes.
 	 */
@@ -446,7 +443,7 @@ public class ApplicationWindow extends JFrame {
 
 	/**
 	 * Returns the program's top-level object.
-	 * 
+	 *
 	 * @return  the main object
 	 */
 	public Application getApplication() {
@@ -454,10 +451,10 @@ public class ApplicationWindow extends JFrame {
 	}
 
 	/**
-	 * 
+	 *
 	/**
 	 * Scrolls the editor panes to the given line
-	 * 
+	 *
 	 * @param position  the zero-based line number
 	 */
 	public void scrollToLine(int position) {
@@ -466,11 +463,11 @@ public class ApplicationWindow extends JFrame {
 
 	/**
 	 * Highlights the text at the given location.
-	 * 
+	 *
 	 * @param side  the left or right editor pane
 	 * @param position  the zero-based position
 	 * @param length  the amount of text to highlight
-	 * @throws BadLocationException 
+	 * @throws BadLocationException
 	 */
 	public void highlight(Side side, int position, int length) throws BadLocationException {
 		leftEditorPane.getHighlighter().removeAllHighlights();
