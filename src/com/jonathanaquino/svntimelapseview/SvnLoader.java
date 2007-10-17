@@ -3,6 +3,7 @@ package com.jonathanaquino.svntimelapseview;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +86,7 @@ public class SvnLoader {
 			String filePath = fullUrl.getPath().replaceAll(".*/", "");
 			SVNRepository repository = repository(url, username, password);
 			List svnFileRevisions = new ArrayList(repository.getFileRevisions(filePath, null, 0, repository.getLatestRevision()));
+			Collections.reverse(svnFileRevisions);
 			List svnFileRevisionsToDownload = svnFileRevisions.subList(Math.max(0, svnFileRevisions.size() - limit), svnFileRevisions.size());
 			totalCount = svnFileRevisionsToDownload.size();
 			revisions = new ArrayList();
