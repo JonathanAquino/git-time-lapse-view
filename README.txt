@@ -45,6 +45,10 @@ search box is provided in the lower-left corner.
 You can also control the four arrow buttons using Alt+Left, Alt+Right, Alt+Up,
 and Alt+Down.
 
+You might find it more convenient to view only the differences instead of the
+entire file. Try selecting the Show Differences Only checkbox at the bottom of
+the window.
+
 
 LICENSING
 

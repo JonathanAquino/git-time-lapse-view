@@ -140,7 +140,7 @@ public class ApplicationWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				MiscHelper.handleExceptions(new Closure() {
 					public void execute() throws Exception {
-						setCurrentRevisionIndex(slider.getValue());
+						loadRevision();
 					}
 				});
 			}
@@ -304,13 +304,23 @@ public class ApplicationWindow extends JFrame {
 								slider.setMaximum(application.getRevisions().size() - 1);
 								slider.setValue(slider.getMaximum());
 								slider.setPaintTicks(application.getRevisions().size() < 100);
-								setCurrentRevisionIndex(slider.getMaximum());
 							}
 						});
 					}
 				});
 			}
 		});
+	}
+	
+	/**
+	 * Displays the revision corresponding to the current slider value.
+	 */
+	public void loadRevision() throws Exception {
+		if (searchPanel.isShowingDifferencesOnly()) {
+			setHorizontalScrollBarValue(0);
+			setVerticalScrollBarValue(0);
+		}
+		setCurrentRevisionIndex(slider.getValue());
 	}
 
 	/**
@@ -321,7 +331,7 @@ public class ApplicationWindow extends JFrame {
 	private void setCurrentRevisionIndex(int n) throws Exception {
 		List revisions = application.getRevisions();
 		if (n >= revisions.size()) { return; }
-		Diff diff = application.diff((Revision) revisions.get(n - 1), (Revision) revisions.get(n));
+		Diff diff = application.diff((Revision) revisions.get(n - 1), (Revision) revisions.get(n), searchPanel.isShowingDifferencesOnly());
 		updateEditorPane(leftEditorPane, diff.getLeftHtml());
 		updateEditorPane(rightEditorPane, diff.getRightHtml());
 		updateMetadataTextArea(leftMetadataTextArea, (Revision) revisions.get(n - 1));

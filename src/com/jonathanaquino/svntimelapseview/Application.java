@@ -92,12 +92,13 @@ public class Application {
 	 *
 	 * @param a  the first revision to examine
 	 * @param b  the second revision to examine
+	 * @param showDifferencesOnly  whether to hide identical lines
 	 * @return  a comparison of the lines in each revision
 	 */
-	public Diff diff(Revision a, Revision b) {
-		String key = a.getRevisionNumber() + ", " + b.getRevisionNumber();
+	public Diff diff(Revision a, Revision b, boolean showDifferencesOnly) {
+		String key = a.getRevisionNumber() + ", " + b.getRevisionNumber() + ", " + (showDifferencesOnly ? "differences only" : "all");
 		if (! diffCache.containsKey(key)) {
-			diffCache.put(key, DiffHelper.diff(a.getContents(), b.getContents()));
+			diffCache.put(key, DiffHelper.diff(a.getContents(), b.getContents(), showDifferencesOnly));
 		}
 		return (Diff) diffCache.get(key);
 	}

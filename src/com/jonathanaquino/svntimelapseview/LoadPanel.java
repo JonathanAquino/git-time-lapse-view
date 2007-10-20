@@ -76,8 +76,8 @@ public class LoadPanel extends JPanel {
      * Creates the panel that displays the progress bar.
      */
     private void createProgressPanel() {
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
+        JButton stopButton = new JButton("Stop");
+        stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
@@ -86,7 +86,7 @@ public class LoadPanel extends JPanel {
                 });
             }
         });
-        progressPanel.add(cancelButton);
+        progressPanel.add(stopButton);
         progressPanel.add(progressBar);
         progressPanel.add(statusLabel);
     }

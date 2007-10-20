@@ -9,6 +9,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -32,6 +33,9 @@ public class SearchPanel extends JPanel {
 
 	/** The label displaying the number of differences in the current diff. */
 	private JLabel differenceCountLabel = new JLabel();
+	
+	/** Checkbox for toggling between showing the entire file and showing differences only. */
+	private JCheckBox showDifferencesOnlyCheckbox = new JCheckBox("Show differences only");
 
 	/**
 	 * Creates a new SearchPanel.
@@ -55,7 +59,19 @@ public class SearchPanel extends JPanel {
 				});
 			}}
 		);
-		add(differenceCountLabel, new GridBagConstraints(10, 0, 1, 1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 4), 0, 0));
+		showDifferencesOnlyCheckbox.setSelected(applicationWindow.getApplication().getConfiguration().getBoolean("showDifferencesOnly", false));
+		showDifferencesOnlyCheckbox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MiscHelper.handleExceptions(new Closure() {
+					public void execute() throws Exception {
+						applicationWindow.getApplication().getConfiguration().setBoolean("showDifferencesOnly", isShowingDifferencesOnly());
+						applicationWindow.loadRevision();
+					}
+				});
+			}}
+		);
+		add(showDifferencesOnlyCheckbox, new GridBagConstraints(9, 0, 1, 1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 20), 0, 0));
+		add(differenceCountLabel, new GridBagConstraints(10, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 4), 0, 0));
 		JButton previousButton = GuiHelper.setShortcutKey(new JButton("\u25B2"), KeyEvent.VK_UP, InputEvent.ALT_MASK);
 		JButton nextButton = GuiHelper.setShortcutKey(new JButton("\u25BC"), KeyEvent.VK_DOWN, InputEvent.ALT_MASK);
 		previousButton.setMargin(new Insets(0, 4, 0, 4));
@@ -149,6 +165,15 @@ public class SearchPanel extends JPanel {
 	 */
 	private void scrollToCurrentDifference(ApplicationWindow applicationWindow) {
 		applicationWindow.scrollToLine(Math.max(0, getCurrentDifferencePosition() - 1));
+	}
+
+	/**
+	 * Whether the "Show differences only" checkbox is selected.
+	 * 
+	 * @return  whether to hide identical lines
+	 */
+	public boolean isShowingDifferencesOnly() {
+		return showDifferencesOnlyCheckbox.isSelected();
 	}
 
 }
