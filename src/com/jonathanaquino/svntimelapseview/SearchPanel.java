@@ -59,7 +59,7 @@ public class SearchPanel extends JPanel {
 				});
 			}}
 		);
-		showDifferencesOnlyCheckbox.setSelected(applicationWindow.getApplication().getConfiguration().getBoolean("showDifferencesOnly", false));
+		showDifferencesOnlyCheckbox.setSelected(applicationWindow.getApplication().getConfiguration().getBoolean("showDifferencesOnly", true));
 		showDifferencesOnlyCheckbox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MiscHelper.handleExceptions(new Closure() {
