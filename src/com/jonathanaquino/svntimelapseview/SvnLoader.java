@@ -86,7 +86,7 @@ public class SvnLoader {
 			SVNRepository repository = repository(url, username, password);
 			List svnFileRevisions = new ArrayList(repository.getFileRevisions(filePath, null, 0, repository.getLatestRevision()));
 			Collections.reverse(svnFileRevisions);
-			List svnFileRevisionsToDownload = svnFileRevisions.subList(Math.max(0, svnFileRevisions.size() - limit), svnFileRevisions.size());
+			List svnFileRevisionsToDownload = svnFileRevisions.subList(0, limit);
 			totalCount = svnFileRevisionsToDownload.size();
 			revisions = new ArrayList();
 			for (Iterator i = svnFileRevisionsToDownload.iterator(); i.hasNext(); ) {
