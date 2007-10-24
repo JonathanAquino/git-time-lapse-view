@@ -148,6 +148,7 @@ public class SvnLoader {
         FSRepositoryFactory.setup(); /* file:// */
         SVNRepository repository = SVNRepositoryFactory.create(SVNURL.parseURIEncoded(url));
         repository.setAuthenticationManager(SVNWCUtil.createDefaultAuthenticationManager(username, password));
+        repository.setTunnelProvider(SVNWCUtil.createDefaultOptions(true));
 		return repository;
 	}
 
