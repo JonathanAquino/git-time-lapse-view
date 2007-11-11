@@ -95,7 +95,22 @@ public class SvnLoader {
 				Map p = r.getRevisionProperties();
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				repository.getFile(r.getPath(), r.getRevision(), null, outputStream);
-				revisions.add(new Revision(r.getRevision(), (String) p.get(SVNRevisionProperty.AUTHOR), formatDate((String) p.get(SVNRevisionProperty.DATE)), (String) p.get(SVNRevisionProperty.LOG), outputStream.toString()));
+				
+				// Try to determine encoding
+				String enc = null;
+				byte[] array = outputStream.toByteArray();
+				if (array[0] == (byte)0xFF && array[1] == (byte)0xFE) {
+					enc = "UTF-16";
+				}
+				else if (array[0] == (byte)0xFE && array[1] == (byte)0xFF) {
+					enc = "UTF-16";
+				}
+				else if (array[0] == (byte)0xEF && array[1] == (byte)0xBB) {
+					enc = "UTF-8";
+				}
+				
+				String content = enc == null ? outputStream.toString() : outputStream.toString(enc); 
+				revisions.add(new Revision(r.getRevision(), (String) p.get(SVNRevisionProperty.AUTHOR), formatDate((String) p.get(SVNRevisionProperty.DATE)), (String) p.get(SVNRevisionProperty.LOG), content));
 				loadedCount++;
 			}
 			Collections.reverse(revisions);
