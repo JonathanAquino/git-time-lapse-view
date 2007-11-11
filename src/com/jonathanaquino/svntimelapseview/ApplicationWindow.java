@@ -80,7 +80,9 @@ public class ApplicationWindow extends JFrame {
 
 	/** Number of freeze requests for the vertical scroll bars */
 	private int verticalScrollBarLocks = 0;
-
+	
+	/** The loadpanel */
+	private LoadPanel loadPanel;
 
 	/**
 	 * Creates a new ViewerFrame.
@@ -125,7 +127,8 @@ public class ApplicationWindow extends JFrame {
 		JPanel innerPanel = new JPanel(new BorderLayout());
 		add(sliderPanel, BorderLayout.NORTH);
 		add(innerPanel, BorderLayout.CENTER);
-		innerPanel.add(new LoadPanel(this), BorderLayout.NORTH);
+		loadPanel = new LoadPanel(this);
+		innerPanel.add(loadPanel, BorderLayout.NORTH);
 		innerPanel.add(editorPanePanel, BorderLayout.CENTER);
 		innerPanel.add(metadataPanel, BorderLayout.SOUTH);
 		searchPanel = new SearchPanel(this);
@@ -300,6 +303,7 @@ public class ApplicationWindow extends JFrame {
 								application.getConfiguration().set("url", filePathOrUrl);
 								application.getConfiguration().set("username", username);
 								application.getConfiguration().setInt("limit", limit);
+								loadPanel.reloadFromConfiguration(application.getConfiguration());
 								slider.setMinimum(1);
 								slider.setMaximum(application.getRevisions().size() - 1);
 								slider.setValue(slider.getMaximum());

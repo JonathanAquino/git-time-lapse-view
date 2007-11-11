@@ -157,6 +157,14 @@ public class LoadPanel extends JPanel {
         usernameField.setText(configuration.get("username", ""));
         limitField.setText(configuration.get("limit", "100"));
     }
+    
+    /**
+     * Reloads the panel items from the configuration
+     * @param configuration The configuration containing values to be reloaded
+     */
+    public void reloadFromConfiguration(Configuration configuration) {
+    	read(configuration);
+    }
 
     /**
      * Displays the panel that shows the progress bar.
