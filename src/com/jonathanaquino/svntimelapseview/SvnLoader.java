@@ -99,14 +99,16 @@ public class SvnLoader {
 				// Try to determine encoding
 				String enc = null;
 				byte[] array = outputStream.toByteArray();
-				if (array[0] == (byte)0xFF && array[1] == (byte)0xFE) {
-					enc = "UTF-16";
-				}
-				else if (array[0] == (byte)0xFE && array[1] == (byte)0xFF) {
-					enc = "UTF-16";
-				}
-				else if (array[0] == (byte)0xEF && array[1] == (byte)0xBB) {
-					enc = "UTF-8";
+				if (array.length > 2) {
+					if (array[0] == (byte)0xFF && array[1] == (byte)0xFE) {
+						enc = "UTF-16";
+					}
+					else if (array[0] == (byte)0xFE && array[1] == (byte)0xFF) {
+						enc = "UTF-16";
+					}
+					else if (array[0] == (byte)0xEF && array[1] == (byte)0xBB) {
+						enc = "UTF-8";
+					}
 				}
 				
 				String content = enc == null ? outputStream.toString() : outputStream.toString(enc); 
