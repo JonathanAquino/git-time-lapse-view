@@ -25,8 +25,8 @@ import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
  */
 public class LoadPanel extends JPanel {
 
-	JButton repoBrowserButton = new JButton("Browse repository");
-	
+    JButton repoBrowserButton = new JButton("Browse repository");
+    
     /** Button that initiates the load. */
     JButton loadButton = new JButton("Load");
 
@@ -130,13 +130,13 @@ public class LoadPanel extends JPanel {
         
         fieldPanel.add(repoBrowserButton);
         repoBrowserButton.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    			MiscHelper.handleExceptions(new Closure() {
+            public void actionPerformed(ActionEvent e) {
+                MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
                         repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()));
                     }
                 });
-    		}
+            }
         });
         read(configuration);
     }
@@ -177,7 +177,7 @@ public class LoadPanel extends JPanel {
      * @param configuration The configuration containing values to be reloaded
      */
     public void reloadFromConfiguration(Configuration configuration) {
-    	read(configuration);
+        read(configuration);
     }
 
     /**

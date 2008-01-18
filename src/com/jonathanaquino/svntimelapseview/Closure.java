@@ -5,9 +5,9 @@ package com.jonathanaquino.svntimelapseview;
  */
 public interface Closure {
 
-	/**
-	 * Calls the closure with no arguments
-	 */
+    /**
+     * Calls the closure with no arguments
+     */
     public void execute() throws Exception;
 
 }

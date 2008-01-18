@@ -25,34 +25,34 @@ import com.jonathanaquino.svntimelapseview.Closure;
  */
 public class GuiHelper {
 
-	/**
-	 * Returns whether the frame is minimized.
-	 *
-	 * @param frame  the frame to inspect
-	 * @return  whether the user has minimized the frame
-	 */
-	public static boolean minimized(JFrame frame) {
-		return (frame.getExtendedState() & JFrame.ICONIFIED) == JFrame.ICONIFIED;
-	}
+    /**
+     * Returns whether the frame is minimized.
+     *
+     * @param frame  the frame to inspect
+     * @return  whether the user has minimized the frame
+     */
+    public static boolean minimized(JFrame frame) {
+        return (frame.getExtendedState() & JFrame.ICONIFIED) == JFrame.ICONIFIED;
+    }
 
-	/**
-	 * Returns whether the frame is maximized.
-	 *
-	 * @param frame  the frame to inspect
-	 * @return  whether the user has maximized the frame
-	 */
-	public static boolean maximized(JFrame frame) {
-		return (frame.getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
-	}
+    /**
+     * Returns whether the frame is maximized.
+     *
+     * @param frame  the frame to inspect
+     * @return  whether the user has maximized the frame
+     */
+    public static boolean maximized(JFrame frame) {
+        return (frame.getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
+    }
 
-	/**
-	 * Maximizes the frame.
-	 *
-	 * @param frame  the frame to modify
-	 */
-	public static void maximize(JFrame frame) {
-		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-	}
+    /**
+     * Maximizes the frame.
+     *
+     * @param frame  the frame to modify
+     */
+    public static void maximize(JFrame frame) {
+        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+    }
 
     /**
      * Ensures that the given operation runs on the AWT event dispatching thread.
@@ -94,10 +94,10 @@ public class GuiHelper {
      * @param chooser  the file dialog
      */
     public static File[] selectedFiles(JFileChooser chooser) {
-    	// Work around Java Bug 4437688 "JFileChooser.getSelectedFile() returns
+        // Work around Java Bug 4437688 "JFileChooser.getSelectedFile() returns
         // nothing when a file is selected"  [Jon Aquino 2007-10-15]
         return ((chooser.getSelectedFiles().length == 0) && (chooser.getSelectedFile() != null))
-        		? new File[] { chooser.getSelectedFile() } : chooser.getSelectedFiles();
+                ? new File[] { chooser.getSelectedFile() } : chooser.getSelectedFiles();
     }
 
     /**
@@ -108,16 +108,16 @@ public class GuiHelper {
      * @return  the text field
      */
     public static JTextField pressOnEnterKey(JTextField textField, final JButton button) {
-    	textField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				MiscHelper.handleExceptions(new Closure() {
-					public void execute() throws Exception {
-						button.doClick();
-					}
-				});
-			}
-    	});
-    	return textField;
+        textField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                MiscHelper.handleExceptions(new Closure() {
+                    public void execute() throws Exception {
+                        button.doClick();
+                    }
+                });
+            }
+        });
+        return textField;
     }
     
     /**
@@ -128,22 +128,22 @@ public class GuiHelper {
      * @param modifiers  a bitwise-ored combination of modifiers (see KeyStroke#getKeyStroke)
      * @return  the button
      */
-	public static JButton setShortcutKey(final JButton button, int keyCode, int modifiers) {
-		ActionMap actionMap = new ActionMapUIResource();
-		actionMap.put("action", new AbstractAction() {
-			public void actionPerformed(ActionEvent arg0) {
-				MiscHelper.handleExceptions(new Closure() {
-					public void execute() throws Exception {
-						button.doClick();
-					}
-				});
-			}    		
-		});
-		SwingUtilities.replaceUIActionMap(button, actionMap);
-		InputMap keyMap = new ComponentInputMap(button);    	
-		keyMap.put(KeyStroke.getKeyStroke(keyCode, modifiers), "action");
-		SwingUtilities.replaceUIInputMap(button, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
-		return button;
-	}
+    public static JButton setShortcutKey(final JButton button, int keyCode, int modifiers) {
+        ActionMap actionMap = new ActionMapUIResource();
+        actionMap.put("action", new AbstractAction() {
+            public void actionPerformed(ActionEvent arg0) {
+                MiscHelper.handleExceptions(new Closure() {
+                    public void execute() throws Exception {
+                        button.doClick();
+                    }
+                });
+            }            
+        });
+        SwingUtilities.replaceUIActionMap(button, actionMap);
+        InputMap keyMap = new ComponentInputMap(button);        
+        keyMap.put(KeyStroke.getKeyStroke(keyCode, modifiers), "action");
+        SwingUtilities.replaceUIInputMap(button, JComponent.WHEN_IN_FOCUSED_WINDOW, keyMap);
+        return button;
+    }
 
 }
