@@ -70,7 +70,7 @@ public class GuiHelper {
     }
 
     /**
-     * Creates a file chooser that checks that the file chosen[ exists.
+     * Creates a file chooser that checks that the file chosen exists.
      * @return
      */
     public static JFileChooser createJFileChooserWithExistenceChecking() {

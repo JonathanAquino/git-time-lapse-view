@@ -166,20 +166,12 @@ public class LoadPanel extends JPanel {
      *
      * @param configuration  configuration properties
      */
-    private void read(Configuration configuration) {
+    public void read(Configuration configuration) {
         urlField.setText(configuration.get("url", "http://svn.svnkit.com/repos/svnkit/trunk/www/license.html"));
         usernameField.setText(configuration.get("username", ""));
         limitField.setText(configuration.get("limit", "100"));
     }
     
-    /**
-     * Reloads the panel items from the configuration
-     * @param configuration The configuration containing values to be reloaded
-     */
-    public void reloadFromConfiguration(Configuration configuration) {
-        read(configuration);
-    }
-
     /**
      * Displays the panel that shows the progress bar.
      */

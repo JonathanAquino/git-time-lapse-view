@@ -94,24 +94,9 @@ public class SvnLoader {
                 if (cancelled) { break; }
                 Map p = r.getRevisionProperties();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                repository.getFile(r.getPath(), r.getRevision(), null, outputStream);
-                
-                // Try to determine encoding
-                String enc = null;
-                byte[] array = outputStream.toByteArray();
-                if (array.length > 2) {
-                    if (array[0] == (byte)0xFF && array[1] == (byte)0xFE) {
-                        enc = "UTF-16";
-                    }
-                    else if (array[0] == (byte)0xFE && array[1] == (byte)0xFF) {
-                        enc = "UTF-16";
-                    }
-                    else if (array[0] == (byte)0xEF && array[1] == (byte)0xBB) {
-                        enc = "UTF-8";
-                    }
-                }
-                
-                String content = enc == null ? outputStream.toString() : outputStream.toString(enc); 
+                repository.getFile(r.getPath(), r.getRevision(), null, outputStream);                
+                String encoding = determineEncoding(outputStream.toByteArray());                
+                String content = encoding == null ? outputStream.toString() : outputStream.toString(encoding); 
                 revisions.add(new Revision(r.getRevision(), (String) p.get(SVNRevisionProperty.AUTHOR), formatDate((String) p.get(SVNRevisionProperty.DATE)), (String) p.get(SVNRevisionProperty.LOG), content));
                 loadedCount++;
             }
@@ -120,6 +105,20 @@ public class SvnLoader {
         } finally {
             loading = false;
         }
+    }
+
+    /**
+     * Tries to determine the character encoding of the given byte array.
+     * 
+     * @param array  the bytes of the string to analyze
+     * @return  the encoding (e.g., UTF-8) or null if it could not be determined.
+     */
+    protected String determineEncoding(byte[] array) {
+        if (array.length <= 2) { return null; }
+        if (array[0] == (byte)0xFF && array[1] == (byte)0xFE) { return "UTF-16"; }
+        if (array[0] == (byte)0xFE && array[1] == (byte)0xFF) { return "UTF-16"; }
+        if (array[0] == (byte)0xEF && array[1] == (byte)0xBB) { return "UTF-8"; }
+        return null;
     }
 
     /**

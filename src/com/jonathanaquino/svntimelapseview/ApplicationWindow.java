@@ -81,7 +81,7 @@ public class ApplicationWindow extends JFrame {
     /** Number of freeze requests for the vertical scroll bars */
     private int verticalScrollBarLocks = 0;
     
-    /** The loadpanel */
+    /** The panel that prompts the user to enter a file path, username, and password. */
     private LoadPanel loadPanel;
 
     /**
@@ -303,7 +303,7 @@ public class ApplicationWindow extends JFrame {
                                 application.getConfiguration().set("url", filePathOrUrl);
                                 application.getConfiguration().set("username", username);
                                 application.getConfiguration().setInt("limit", limit);
-                                loadPanel.reloadFromConfiguration(application.getConfiguration());
+                                loadPanel.read(application.getConfiguration());
                                 slider.setMinimum(1);
                                 slider.setMaximum(application.getRevisions().size() - 1);
                                 slider.setValue(slider.getMaximum());
