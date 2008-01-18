@@ -50,7 +50,7 @@ public class RepoBrowserDialog extends JDialog {
      * @param frame The owner frame
      */
     public RepoBrowserDialog(Frame frame) {
-        super(frame, "Repository browser", true);
+        super(frame, "Repository Browser", true);
         applicationWindow = (ApplicationWindow) frame;
         setSize(500, 309);
         getContentPane().setLayout(new BorderLayout());

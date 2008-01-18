@@ -24,8 +24,6 @@ import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
  * A panel that prompts the user to enter a file path, username, and password.
  */
 public class LoadPanel extends JPanel {
-
-    JButton repoBrowserButton = new JButton("Browse repository");
     
     /** Button that initiates the load. */
     JButton loadButton = new JButton("Load");
@@ -57,8 +55,11 @@ public class LoadPanel extends JPanel {
     /** The panel that displays the progress bar. */
     private JPanel progressPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-    /** The Browse dialog */
+    /** The dialog for browsing a filesystem. */
     private JFileChooser fileChooser = null;
+
+    /** The dialog for browsing a repository. */
+    private RepoBrowserDialog repoBrowserDialog;
 
     /**
      * Creates a new LoadPanel.
@@ -98,7 +99,7 @@ public class LoadPanel extends JPanel {
      */
     private void initializeFieldPanel() {
         final Configuration configuration = applicationWindow.getApplication().getConfiguration();
-        final RepoBrowserDialog repoBrowserDialog = new RepoBrowserDialog(applicationWindow);
+        repoBrowserDialog = new RepoBrowserDialog(applicationWindow);
         JLabel urlLabel = new JLabel("File Path/URL:");
         urlLabel.setToolTipText("The file path or URL, e.g., http://svn.svnkit.com/repos/svnkit/trunk/www/license.html");
         fieldPanel.add(urlLabel);
@@ -126,33 +127,26 @@ public class LoadPanel extends JPanel {
                 });
             }
         });
-        fieldPanel.add(loadButton);
-        
-        fieldPanel.add(repoBrowserButton);
-        repoBrowserButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                MiscHelper.handleExceptions(new Closure() {
-                    public void execute() throws Exception {
-                        repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()));
-                    }
-                });
-            }
-        });
+        fieldPanel.add(loadButton);       
         read(configuration);
     }
 
     private Component createBrowseButton() {
         JButton button = new JButton("...");
-        button.setToolTipText("Browse for a file");
+        button.setToolTipText("Browse directories/repository");
         button.setMargin(new Insets(0, 2, 0, 2));
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        File directory = new File(urlField.getText()).getParentFile();
-                        if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
-                        if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
-                            urlField.setText(getFileChooser().getSelectedFile().getPath());
+                        if (urlField.getText().indexOf("://") > -1) {
+                            repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()));
+                        } else {
+                            File directory = new File(urlField.getText()).getParentFile();
+                            if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
+                            if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
+                                urlField.setText(getFileChooser().getSelectedFile().getPath());
+                            }       
                         }
                     }
                 });
