@@ -122,7 +122,6 @@ public class LoadPanel extends JPanel {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
                         applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), Integer.parseInt(limitField.getText()));
-                        showProgressPanel();
                     }
                 });
             }
@@ -146,7 +145,8 @@ public class LoadPanel extends JPanel {
                             if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
                             if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
                                 urlField.setText(getFileChooser().getSelectedFile().getPath());
-                            }       
+                                applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), Integer.parseInt(limitField.getText()));
+                            }
                         }
                     }
                 });
@@ -200,7 +200,7 @@ public class LoadPanel extends JPanel {
     /**
      * Displays the panel that contains the input fields.
      */
-    public void showFieldPanel() {
+    private void showFieldPanel() {
         ((CardLayout) getLayout()).show(this, "field-panel");
     }
 

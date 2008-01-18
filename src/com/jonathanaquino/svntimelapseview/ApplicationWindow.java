@@ -314,6 +314,7 @@ public class ApplicationWindow extends JFrame {
                 });
             }
         });
+        loadPanel.showProgressPanel();
     }
     
     /**
