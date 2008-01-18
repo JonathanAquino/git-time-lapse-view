@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,6 +37,9 @@ public class LoadPanel extends JPanel {
 
     /** Text field for entering an SVN password. */
     private JPasswordField passwordField = (JPasswordField) GuiHelper.pressOnEnterKey(new JPasswordField(10), loadButton);
+    
+    /** Checkbox for whether to save the password. */
+    private JCheckBox rememberPasswordCheckBox = new JCheckBox("Remember Pw");
 
     /** Text field for entering the maximum number of revisions to retrieve. */
     private JTextField limitField = GuiHelper.pressOnEnterKey(new JTextField(5), loadButton);
@@ -105,6 +109,10 @@ public class LoadPanel extends JPanel {
         fieldPanel.add(urlLabel);
         fieldPanel.add(urlField);
         fieldPanel.add(createBrowseButton());
+        JLabel limitLabel = new JLabel("Limit:");
+        limitLabel.setToolTipText("Maximum number of revisions to retrieve");
+        fieldPanel.add(limitLabel);
+        fieldPanel.add(limitField);
         JLabel usernameLabel = new JLabel("User:");
         usernameLabel.setToolTipText("Your username (if any)");
         fieldPanel.add(usernameLabel);
@@ -113,10 +121,18 @@ public class LoadPanel extends JPanel {
         passwordLabel.setToolTipText("Your password (if any)");
         fieldPanel.add(passwordLabel);
         fieldPanel.add(passwordField);
-        JLabel limitLabel = new JLabel("Limit:");
-        limitLabel.setToolTipText("Maximum number of revisions to retrieve");
-        fieldPanel.add(limitLabel);
-        fieldPanel.add(limitField);
+        rememberPasswordCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MiscHelper.handleExceptions(new Closure() {
+                    public void execute() throws Exception {
+                        configuration.set("password", rememberPasswordCheckBox.isSelected() ? new String(passwordField.getPassword()) : "");
+                        configuration.setBoolean("rememberPassword", rememberPasswordCheckBox.isSelected());
+                    }
+                });
+            }
+        });
+        rememberPasswordCheckBox.setToolTipText("Save the password for next time");
+        fieldPanel.add(rememberPasswordCheckBox);
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
@@ -139,7 +155,7 @@ public class LoadPanel extends JPanel {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
                         if (urlField.getText().indexOf("://") > -1) {
-                            repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()));
+                            repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()), Integer.parseInt(limitField.getText()));
                         } else {
                             File directory = new File(urlField.getText()).getParentFile();
                             if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
@@ -163,6 +179,8 @@ public class LoadPanel extends JPanel {
     public void read(Configuration configuration) {
         urlField.setText(configuration.get("url", "http://svn.svnkit.com/repos/svnkit/trunk/www/license.html"));
         usernameField.setText(configuration.get("username", ""));
+        passwordField.setText(configuration.get("password", ""));
+        rememberPasswordCheckBox.setSelected(configuration.getBoolean("rememberPassword", true));
         limitField.setText(configuration.get("limit", "100"));
     }
     
@@ -216,4 +234,3 @@ public class LoadPanel extends JPanel {
     }
 
 }
-
