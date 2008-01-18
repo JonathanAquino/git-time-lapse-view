@@ -131,11 +131,11 @@ public class RepoBrowserDialog extends JDialog {
 
     private TreePath getSVNNodePathFromUrl(String repoUrl, SVNNode node,
             TreePath path) {
-        List<SVNNode> children = node.getChildren();
+        List children = node.getChildren();
         if (children != null) {
             SVNNode child = null;
-            for (Iterator<SVNNode> iter = children.iterator(); iter.hasNext();) {
-                child = iter.next();
+            for (Iterator iter = children.iterator(); iter.hasNext();) {
+                child = (SVNNode)iter.next();
                 if (repoUrl.startsWith(child.toString())) {
                     TreePath newPath = path.pathByAddingChild(child);
                     String restOfUrl = getRestOfUrl(child, repoUrl);
@@ -225,7 +225,7 @@ public class RepoBrowserDialog extends JDialog {
                 try {
                     SVNDirEntry rootUrl = repository.getDir("/", -1, false,
                             children);
-                    List<SVNNode> svnNodeChildren = new ArrayList<SVNNode>(children.size());
+                    List svnNodeChildren = new ArrayList(children.size());
                     for (Iterator iter = children.iterator(); iter.hasNext();) {
                         SVNDirEntry child = (SVNDirEntry) iter.next();
                         svnNodeChildren.add(new SVNNode(child, ""));
@@ -259,7 +259,7 @@ public class RepoBrowserDialog extends JDialog {
 
     private static class SVNNode {
 
-        private List<SVNNode> children;
+        private List children;
         private SVNDirEntry svnDirEntry;
         private String parentPath;
 
@@ -269,13 +269,13 @@ public class RepoBrowserDialog extends JDialog {
             this.parentPath = parentPath;
         }
 
-        public SVNNode(SVNDirEntry svnDirEntry, List<SVNNode> children) {
+        public SVNNode(SVNDirEntry svnDirEntry, List children) {
             super();
             this.children = children;
             this.svnDirEntry = svnDirEntry;
         }
 
-        public List<SVNNode> getChildren() {
+        public List getChildren() {
             return children;
         }
 
@@ -296,7 +296,7 @@ public class RepoBrowserDialog extends JDialog {
 
         public void loadChildren(SVNRepository repository) {
             try {
-                children = new ArrayList<SVNNode>();
+                children = new ArrayList();
                 if (svnDirEntry.getKind() == SVNNodeKind.DIR) {
                     String path = (!parentPath.equals("") ? parentPath + "/"
                             : "/")
@@ -317,9 +317,13 @@ public class RepoBrowserDialog extends JDialog {
         }
     }
 
-    private static class SVNNodeComparator implements Comparator<SVNNode> {
+    private static class SVNNodeComparator implements Comparator {
 
-        public int compare(SVNNode o1, SVNNode o2) {
+        public int compare(Object o1, Object o2) {
+            return compare((SVNNode)o1, (SVNNode)o2);
+        }
+        
+        private int compare(SVNNode o1, SVNNode o2) {
             if (o1.getSVNDirEntry().getKind() == SVNNodeKind.DIR
                     && o2.getSVNDirEntry().getKind() == SVNNodeKind.FILE) {
                 return -1;
