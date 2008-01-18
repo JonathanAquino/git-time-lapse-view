@@ -2,14 +2,10 @@ package com.jonathanaquino.svntimelapseview.helpers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
-import javax.swing.plaf.ListUI;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.jonathanaquino.svntimelapseview.Diff;

@@ -158,31 +158,6 @@ public class DiffHelper {
 	}	
 	
 	/**
-	 * Returns the zero-based line numbers at which differences start.
-	 *
-	 * @param leftLines  text for the left side of the diff
-	 * @param rightLines  text for the right side of the diff
-	 * @param leftLineNumbers  line number strings, or empty strings where lines are missing
-	 * @param rightLineNumbers  line number strings, or empty strings where lines are missing
-	 * @return  0 for the first line, 1 for the 2nd, etc.
-	 */
-	private static List differencePositions(List leftLines, List rightLines, List leftLineNumbers, List rightLineNumbers) {
-		List differencePositions = new ArrayList();
-		boolean insideDifference = false;
-		for (int i = 0; i < leftLines.size(); i++) {
-			if (leftLines.get(i).equals(rightLines.get(i)) && (leftLineNumbers.get(i).toString().length() > 0 == rightLineNumbers.get(i).toString().length() > 0)) {
-				insideDifference = false;
-				continue;
-			}
-			if (! insideDifference) {
-				insideDifference = true;
-				differencePositions.add(new Integer(i));
-			}
-		}
-		return differencePositions;
-	}
-	
-	/**
 	 * Returns formatted text for the two lines
 	 *
 	 * @param leftLineNumber  line number for the left line, or an empty string if it does not exist

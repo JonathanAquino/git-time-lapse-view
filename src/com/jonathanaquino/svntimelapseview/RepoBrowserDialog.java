@@ -40,9 +40,6 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 public class RepoBrowserDialog extends JDialog {
 
     private JTree repoTree;
-    private String repoUrl;
-    private String userName;
-    private String password;
     private JScrollPane scrollPane;
     private ApplicationWindow applicationWindow;
     private SVNRepository repository;
@@ -72,9 +69,6 @@ public class RepoBrowserDialog extends JDialog {
      */
     public void load(String repoUrl, final String userName,
             final String password) {
-        this.userName = userName;
-        this.password = password;
-        this.repoUrl = repoUrl;
         repoTree = new JTree();
         repoTree.setCellRenderer(new SVNTreeRenderer());
 
