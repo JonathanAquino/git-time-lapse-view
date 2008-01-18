@@ -49,6 +49,11 @@ You might find it more convenient to view only the differences instead of the
 entire file. Try selecting the Show Differences Only checkbox at the bottom of
 the window.
 
+To use the Browse Directories/Repository button ("..."), first enter a file path
+or repository URL into the File Path/URL field. Fill in the User and Password
+fields if necessary. Then press the "..." button. A file dialog or
+repository-browser dialog will appear, allowing you to choose a file.
+
 
 LICENSING
 
