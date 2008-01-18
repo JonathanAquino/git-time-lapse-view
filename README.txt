@@ -88,5 +88,5 @@ FatJar (easy single-jar deployment): http://fjep.sourceforge.net/
 
 CONTACTS
 
-For all questions related to SVN Time-Lapse View please contact Jonathan Aquino
-at jonathan.aquino@gmail.com
+Jonathan Aquino  -  jonathan.aquino@gmail.com  -  http://jonathanaquino.com
+Kim Tiedemann  -  http://www.tiede.dk:8080/roller/kim/
