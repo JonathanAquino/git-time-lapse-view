@@ -20,6 +20,7 @@ import javax.swing.Timer;
 
 import com.jonathanaquino.svntimelapseview.helpers.GuiHelper;
 import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
+import com.jonathanaquino.svntimelapseview.helpers.Rot13;
 
 /**
  * A panel that prompts the user to enter a file path, username, and password.
@@ -125,8 +126,7 @@ public class LoadPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        configuration.set("password", rememberPasswordCheckBox.isSelected() ? new String(passwordField.getPassword()) : "");
-                        configuration.setBoolean("rememberPassword", rememberPasswordCheckBox.isSelected());
+                        applicationWindow.setPassword(new String(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), configuration);
                     }
                 });
             }
@@ -137,7 +137,7 @@ public class LoadPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), Integer.parseInt(limitField.getText()));
+                        applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
                     }
                 });
             }
@@ -155,13 +155,13 @@ public class LoadPanel extends JPanel {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
                         if (urlField.getText().indexOf("://") > -1) {
-                            repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()), Integer.parseInt(limitField.getText()));
+                            repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
                         } else {
                             File directory = new File(urlField.getText()).getParentFile();
                             if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
                             if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
                                 urlField.setText(getFileChooser().getSelectedFile().getPath());
-                                applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), Integer.parseInt(limitField.getText()));
+                                applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
                             }
                         }
                     }
@@ -179,7 +179,7 @@ public class LoadPanel extends JPanel {
     public void read(Configuration configuration) {
         urlField.setText(configuration.get("url", "http://svn.svnkit.com/repos/svnkit/trunk/www/license.html"));
         usernameField.setText(configuration.get("username", ""));
-        passwordField.setText(configuration.get("password", ""));
+        passwordField.setText(Rot13.rot13(configuration.get("password", "")));
         rememberPasswordCheckBox.setSelected(configuration.getBoolean("rememberPassword", true));
         limitField.setText(configuration.get("limit", "100"));
     }

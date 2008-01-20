@@ -66,10 +66,11 @@ public class RepoBrowserDialog extends JDialog {
      * @param repoUrl The url of the Subversion repository
      * @param userName The name of the user
      * @param password The password of the user
+     * @param rememberPassword  whether to save the password in the configuration file
      * @param limit The maximum number of revisions to download
      */
     public void load(String repoUrl, final String userName,
-            final String password, final int limit) {
+            final String password, final boolean rememberPassword, final int limit) {
         repoTree = new JTree();
         repoTree.setCellRenderer(new SVNTreeRenderer());
 
@@ -85,7 +86,7 @@ public class RepoBrowserDialog extends JDialog {
                         try {
                             applicationWindow.load(selectedNode
                                     .getSVNDirEntry().getURL().toString(),
-                                    userName, password, limit);
+                                    userName, password, rememberPassword, limit);
                             setVisible(false);
                         } catch (Exception e1) {
                             throw new RuntimeException(e1);

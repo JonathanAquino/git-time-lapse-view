@@ -39,6 +39,7 @@ import javax.swing.text.DefaultHighlighter;
 import com.jonathanaquino.svntimelapseview.Searcher.Side;
 import com.jonathanaquino.svntimelapseview.helpers.GuiHelper;
 import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
+import com.jonathanaquino.svntimelapseview.helpers.Rot13;
 
 /**
  * The main window of the program.
@@ -100,7 +101,7 @@ public class ApplicationWindow extends JFrame {
             public void componentShown(ComponentEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        if (filePathOrUrl != null) { load(filePathOrUrl, username, password, limit); }
+                        if (filePathOrUrl != null) { load(filePathOrUrl, username, password, false, limit); }
                     }
                 });
             }
@@ -288,9 +289,10 @@ public class ApplicationWindow extends JFrame {
      * @param filePathOrUrl  Subversion URL or working-copy file path
      * @param username  username, or an empty string for anonymous
      * @param password  password, or an empty string for anonymous
+     * @param rememberPassword  whether to save the password in the configuration file
      * @param limit  maximum number of revisions to download
      */
-    public void load(final String filePathOrUrl, final String username, final String password, final int limit) throws Exception {
+    public void load(final String filePathOrUrl, final String username, final String password, final boolean rememberPassword, final int limit) throws Exception {
         application.load(filePathOrUrl, username, password, limit, new Closure() {
             public void execute() throws Exception {
                 GuiHelper.invokeOnEventThread(new Runnable() {
@@ -303,6 +305,7 @@ public class ApplicationWindow extends JFrame {
                                 application.getConfiguration().set("url", filePathOrUrl);
                                 application.getConfiguration().set("username", username);
                                 application.getConfiguration().setInt("limit", limit);
+                                setPassword(password, rememberPassword, application.getConfiguration());
                                 loadPanel.read(application.getConfiguration());
                                 slider.setMinimum(1);
                                 slider.setMaximum(application.getRevisions().size() - 1);
@@ -315,6 +318,18 @@ public class ApplicationWindow extends JFrame {
             }
         });
         loadPanel.showProgressPanel();
+    }
+    
+    /**
+     * Updates the password stored in the configuration file.
+     * 
+     * @param password  the password
+     * @param rememberPassword  whether to store the password or an empty string
+     * @param configuration  the configuration file
+     */
+    public void setPassword(String password, boolean rememberPassword, final Configuration configuration) throws Exception {
+        configuration.set("password", rememberPassword ? Rot13.rot13(password) : "");
+        configuration.setBoolean("rememberPassword", rememberPassword);
     }
     
     /**
