@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.SVNRevisionProperty;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
@@ -92,12 +92,12 @@ public class SvnLoader {
             for (Iterator i = svnFileRevisionsToDownload.iterator(); i.hasNext(); ) {
                 SVNFileRevision r = (SVNFileRevision) i.next();
                 if (cancelled) { break; }
-                Map p = r.getRevisionProperties();
+                SVNProperties p = r.getRevisionProperties();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 repository.getFile(r.getPath(), r.getRevision(), null, outputStream);                
                 String encoding = determineEncoding(outputStream.toByteArray());                
                 String content = encoding == null ? outputStream.toString() : outputStream.toString(encoding); 
-                revisions.add(new Revision(r.getRevision(), (String) p.get(SVNRevisionProperty.AUTHOR), formatDate((String) p.get(SVNRevisionProperty.DATE)), (String) p.get(SVNRevisionProperty.LOG), content));
+                revisions.add(new Revision(r.getRevision(), p.getStringValue(SVNRevisionProperty.AUTHOR), formatDate(p.getStringValue(SVNRevisionProperty.DATE)), p.getStringValue(SVNRevisionProperty.LOG), content));
                 loadedCount++;
             }
             Collections.reverse(revisions);
