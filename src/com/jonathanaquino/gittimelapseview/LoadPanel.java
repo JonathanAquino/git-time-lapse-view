@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
 
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -18,9 +18,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import com.jonathanaquino.svntimelapseview.helpers.GuiHelper;
-import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
-import com.jonathanaquino.svntimelapseview.helpers.Rot13;
+import com.jonathanaquino.gittimelapseview.helpers.GuiHelper;
+import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
+import com.jonathanaquino.gittimelapseview.helpers.Rot13;
 
 /**
  * A panel that prompts the user to enter a file path, username, and password.

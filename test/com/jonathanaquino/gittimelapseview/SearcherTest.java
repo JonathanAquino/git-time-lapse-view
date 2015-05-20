@@ -1,4 +1,6 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
+
+import com.jonathanaquino.gittimelapseview.Searcher;
 
 import junit.framework.TestCase;
 

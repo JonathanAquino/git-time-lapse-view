@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,7 +21,7 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
-import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
+import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
 
 
 /**

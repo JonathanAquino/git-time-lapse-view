@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview.helpers;
+package com.jonathanaquino.gittimelapseview.helpers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +18,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.ActionMapUIResource;
 
-import com.jonathanaquino.svntimelapseview.Closure;
+import com.jonathanaquino.gittimelapseview.Closure;
 
 /**
  * GUI-related utility functions.

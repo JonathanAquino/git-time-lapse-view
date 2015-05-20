@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview.helpers;
+package com.jonathanaquino.gittimelapseview.helpers;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.incava.util.diff.Difference;
 
-import com.jonathanaquino.svntimelapseview.Diff;
+import com.jonathanaquino.gittimelapseview.Diff;
 
 /**
  * Utility functions for diffing files.

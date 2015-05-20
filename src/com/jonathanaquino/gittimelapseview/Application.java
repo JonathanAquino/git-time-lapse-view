@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
 
 import jargs.gnu.CmdLineParser;
 
@@ -11,7 +11,7 @@ import java.util.Map;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
-import com.jonathanaquino.svntimelapseview.helpers.DiffHelper;
+import com.jonathanaquino.gittimelapseview.helpers.DiffHelper;
 
 /**
  * The top-level object in the program.

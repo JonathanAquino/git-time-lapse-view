@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,10 +36,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 
-import com.jonathanaquino.svntimelapseview.Searcher.Side;
-import com.jonathanaquino.svntimelapseview.helpers.GuiHelper;
-import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
-import com.jonathanaquino.svntimelapseview.helpers.Rot13;
+import com.jonathanaquino.gittimelapseview.Searcher.Side;
+import com.jonathanaquino.gittimelapseview.helpers.GuiHelper;
+import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
+import com.jonathanaquino.gittimelapseview.helpers.Rot13;
 
 /**
  * The main window of the program.

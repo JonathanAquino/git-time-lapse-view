@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
 
 /**
  * A revision of a file in Subversion

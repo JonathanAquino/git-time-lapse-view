@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview.helpers;
+package com.jonathanaquino.gittimelapseview.helpers;
 
 /* Copyright 2002, 2003 Elliotte Rusty Harold
 

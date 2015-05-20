@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview.helpers;
+package com.jonathanaquino.gittimelapseview.helpers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.jonathanaquino.svntimelapseview.Diff;
+import com.jonathanaquino.gittimelapseview.Diff;
+import com.jonathanaquino.gittimelapseview.helpers.DiffHelper;
 
 public class DiffHelperTest extends TestCase {
 

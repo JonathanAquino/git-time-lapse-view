@@ -1,4 +1,6 @@
-package com.jonathanaquino.svntimelapseview.helpers;
+package com.jonathanaquino.gittimelapseview.helpers;
+
+import com.jonathanaquino.gittimelapseview.helpers.Rot13;
 
 import junit.framework.TestCase;
 

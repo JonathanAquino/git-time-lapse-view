@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import javax.swing.Timer;
 
-import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
+import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
 
 /**
  * Persistent configuration properties.

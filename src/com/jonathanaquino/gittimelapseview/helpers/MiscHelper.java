@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview.helpers;
+package com.jonathanaquino.gittimelapseview.helpers;
 
 import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
@@ -6,8 +6,8 @@ import java.io.PrintStream;
 
 import javax.swing.Timer;
 
-import com.jonathanaquino.svntimelapseview.Closure;
-import com.jonathanaquino.svntimelapseview.ErrorWindow;
+import com.jonathanaquino.gittimelapseview.Closure;
+import com.jonathanaquino.gittimelapseview.ErrorWindow;
 
 /**
  * Miscellaneous utility functions.

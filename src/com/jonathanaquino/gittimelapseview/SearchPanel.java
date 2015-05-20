@@ -1,4 +1,4 @@
-package com.jonathanaquino.svntimelapseview;
+package com.jonathanaquino.gittimelapseview;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,8 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.jonathanaquino.svntimelapseview.helpers.GuiHelper;
-import com.jonathanaquino.svntimelapseview.helpers.MiscHelper;
+import com.jonathanaquino.gittimelapseview.helpers.GuiHelper;
+import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
 
 /**
  * The bar at the bottom of the application window.
