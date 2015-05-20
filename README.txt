@@ -55,6 +55,14 @@ fields if necessary. Then press the "..." button. A file dialog or
 repository-browser dialog will appear, allowing you to choose a file.
 
 
+BUILD INSTRUCTIONS
+
+1. Open your favorite Java IDE.
+2. Add src and test as source paths.
+3. Add the jars in lib and lib/test.
+4. Run com.jonathanaquino.gittimelapseview.Application.
+
+
 LICENSING
 
 This program is free software; you can redistribute it and/or modify it under
