@@ -2,24 +2,24 @@ package com.jonathanaquino.gittimelapseview;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNProperties;
-import org.tmatesoft.svn.core.SVNRevisionProperty;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
-import org.tmatesoft.svn.core.io.SVNFileRevision;
-import org.tmatesoft.svn.core.io.SVNRepository;
-import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-import org.tmatesoft.svn.core.wc.SVNClientManager;
-import org.tmatesoft.svn.core.wc.SVNRevision;
-import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 
 import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
 
@@ -77,30 +77,45 @@ public class SvnLoader {
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
-    private void loadRevisionsProper(String filePathOrUrl, String username, String password, int limit, Closure afterLoad) throws SVNException, Exception {
+    private void loadRevisionsProper(String filePathOrUrl, String username, String password, int limit, Closure afterLoad) throws Exception {
         try {
             loadedCount = totalCount = 0;
-            SVNURL fullUrl = svnUrl(filePathOrUrl, username, password);
-            String url = fullUrl.removePathTail().toString();
-            String filePath = fullUrl.getPath().replaceAll(".*/", "");
-            SVNRepository repository = repository(url, username, password);
-            List svnFileRevisions = new ArrayList(repository.getFileRevisions(filePath, null, 0, repository.getLatestRevision()));
-            Collections.reverse(svnFileRevisions);
-            List svnFileRevisionsToDownload = svnFileRevisions.size() > limit ? svnFileRevisions.subList(0, limit) : svnFileRevisions;
-            totalCount = svnFileRevisionsToDownload.size();
-            revisions = new ArrayList();
-            for (Iterator i = svnFileRevisionsToDownload.iterator(); i.hasNext(); ) {
-                SVNFileRevision r = (SVNFileRevision) i.next();
-                if (cancelled) { break; }
-                SVNProperties p = r.getRevisionProperties();
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                repository.getFile(r.getPath(), r.getRevision(), null, outputStream);                
-                String encoding = determineEncoding(outputStream.toByteArray());                
-                String content = encoding == null ? outputStream.toString() : outputStream.toString(encoding); 
-                revisions.add(new Revision(r.getRevision(), p.getStringValue(SVNRevisionProperty.AUTHOR), formatDate(p.getStringValue(SVNRevisionProperty.DATE)), p.getStringValue(SVNRevisionProperty.LOG), content));
-                loadedCount++;
+            FileRepositoryBuilder builder = new FileRepositoryBuilder();
+            Repository repository = builder.readEnvironment().findGitDir(new File(filePathOrUrl)).build();
+            try {
+                // From http://stackoverflow.com/a/205655/2391566
+                String relativePath = repository.getDirectory().getParentFile().toURI().relativize(new File(filePathOrUrl).toURI()).getPath();
+                Git git = new Git(repository);
+                Iterable<RevCommit> log = git.log().addPath(relativePath).call();
+                revisions = new ArrayList();
+                for (Iterator<RevCommit> i = log.iterator(); i.hasNext(); ) {
+                    RevCommit revCommit = i.next();
+                    if (cancelled) { break; }
+                    RevTree revTree = revCommit.getTree();
+                    TreeWalk treeWalk = new TreeWalk(repository);
+                    treeWalk.addTree(revTree);
+                    treeWalk.setRecursive(true);
+                    treeWalk.setFilter(PathFilter.create(relativePath));
+                    if (!treeWalk.next()) {
+                        throw new IllegalStateException("Did not find expected file '" + relativePath + "'");
+                    }
+                    ObjectId objectId = treeWalk.getObjectId(0);
+                    ObjectLoader loader = repository.open(objectId);
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    loader.copyTo(outputStream);                                                                          
+                    String encoding = determineEncoding(outputStream.toByteArray());                
+                    String content = encoding == null ? outputStream.toString() : outputStream.toString(encoding); 
+                    revisions.add(new Revision(revCommit.getName(), 
+                                               revCommit.getAuthorIdent().getName(), 
+                                               formatDate(revCommit.getCommitTime(), null), 
+                                               revCommit.getFullMessage(), 
+                                               content));
+                    loadedCount++;
+                }
+                Collections.reverse(revisions);
+            } finally {
+                repository.close();
             }
-            Collections.reverse(revisions);
             afterLoad.execute();
         } finally {
             loading = false;
@@ -122,50 +137,20 @@ public class SvnLoader {
     }
 
     /**
-     * Normalizes the given file path or URL.
-     *
-     * @param filePathOrUrl  Subversion URL or working-copy file path
-     * @param username  username, or null for anonymous
-     * @param password  password, or null for anonymous
-     * @return  the corresponding Subversion URL
-     */
-    private SVNURL svnUrl(String filePathOrUrl, String username, String password) throws SVNException {
-        SVNURL svnUrl;
-        if (new File(filePathOrUrl).exists()) {
-            SVNClientManager clientManager = SVNClientManager.newInstance(SVNWCUtil.createDefaultOptions(true), username, password);
-            svnUrl = clientManager.getWCClient().doInfo(new File(filePathOrUrl), SVNRevision.WORKING).getURL();
-        } else {
-            svnUrl = SVNURL.parseURIEncoded(filePathOrUrl);
-        }
-        return svnUrl;
-    }
-
-    /**
      * Formats the value of the date property
      *
-     * @param date  the revision date
+     * @param time  a Unix timestamp
+     * @param timeZone  ID for the time zone, or null
      * @return a friendlier date string
      */
-    protected String formatDate(String date) {
-        return date.replaceFirst("(.*)T(.*:.*):.*", "$1 $2");
-    }
-
-    /**
-     * Returns the specified Subversion repository
-     *
-     * @param url  URL of the Subversion repository or one of its files
-     * @param username  username, or null for anonymous
-     * @param password  password, or null for anonymous
-     * @return  the repository handle
-     */
-    private SVNRepository repository(String url, String username, String password) throws Exception {
-        DAVRepositoryFactory.setup();
-        SVNRepositoryFactoryImpl.setup(); /* svn:// and svn+xxx:// */
-        FSRepositoryFactory.setup(); /* file:// */
-        SVNRepository repository = SVNRepositoryFactory.create(SVNURL.parseURIEncoded(url));
-        repository.setAuthenticationManager(SVNWCUtil.createDefaultAuthenticationManager(username, password));
-        repository.setTunnelProvider(SVNWCUtil.createDefaultOptions(true));
-        return repository;
+    protected String formatDate(int time, String timeZone) {
+        // From http://stackoverflow.com/a/17433005/2391566
+        Date date = new Date(time*1000L); 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        if (timeZone != null) {
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        }
+        return simpleDateFormat.format(date);
     }
 
     /**

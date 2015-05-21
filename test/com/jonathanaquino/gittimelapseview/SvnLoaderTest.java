@@ -7,8 +7,8 @@ import junit.framework.TestCase;
 public class SvnLoaderTest extends TestCase {
 
     private class TestSvnLoader extends SvnLoader {
-        public String formatDate(String date) {
-            return super.formatDate(date);
+        public String formatDate(int time, String timeZone) {
+            return super.formatDate(time, timeZone);
         }
         protected String determineEncoding(byte[] array) {
             return super.determineEncoding(array);
@@ -16,8 +16,7 @@ public class SvnLoaderTest extends TestCase {
     }
 
     public void testFormatDate() {
-        assertEquals("2007-09-16 10:18", new TestSvnLoader().formatDate("2007-09-16T10:18:10.143692Z"));
-        assertEquals("2007-09-FOO", new TestSvnLoader().formatDate("2007-09-FOO"));
+        assertEquals("2007-09-16 10:18:10 GMT", new TestSvnLoader().formatDate(1189937890, "GMT"));
     }
     
     public void testDetermineEncoding() {
