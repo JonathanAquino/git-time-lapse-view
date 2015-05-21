@@ -63,9 +63,6 @@ public class LoadPanel extends JPanel {
     /** The dialog for browsing a filesystem. */
     private JFileChooser fileChooser = null;
 
-    /** The dialog for browsing a repository. */
-    private RepoBrowserDialog repoBrowserDialog;
-
     /**
      * Creates a new LoadPanel.
      *
@@ -104,9 +101,8 @@ public class LoadPanel extends JPanel {
      */
     private void initializeFieldPanel() {
         final Configuration configuration = applicationWindow.getApplication().getConfiguration();
-        repoBrowserDialog = new RepoBrowserDialog(applicationWindow);
-        JLabel urlLabel = new JLabel("File Path/URL:");
-        urlLabel.setToolTipText("The file path or URL, e.g., http://svn.svnkit.com/repos/svnkit/trunk/www/license.html");
+        JLabel urlLabel = new JLabel("File Path:");
+        urlLabel.setToolTipText("The file path");
         fieldPanel.add(urlLabel);
         fieldPanel.add(urlField);
         fieldPanel.add(createBrowseButton());
@@ -148,21 +144,17 @@ public class LoadPanel extends JPanel {
 
     private Component createBrowseButton() {
         JButton button = new JButton("...");
-        button.setToolTipText("Browse directories/repository");
+        button.setToolTipText("Browse directories");
         button.setMargin(new Insets(0, 2, 0, 2));
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        if (urlField.getText().indexOf("://") > -1) {
-                            repoBrowserDialog.load(urlField.getText(), usernameField.getText(), new String(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
-                        } else {
-                            File directory = new File(urlField.getText()).getParentFile();
-                            if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
-                            if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
-                                urlField.setText(getFileChooser().getSelectedFile().getPath());
-                                applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
-                            }
+                        File directory = new File(urlField.getText()).getParentFile();
+                        if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
+                        if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
+                            urlField.setText(getFileChooser().getSelectedFile().getPath());
+                            applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
                         }
                     }
                 });
@@ -177,7 +169,7 @@ public class LoadPanel extends JPanel {
      * @param configuration  configuration properties
      */
     public void read(Configuration configuration) {
-        urlField.setText(configuration.get("url", "http://svn.svnkit.com/repos/svnkit/trunk/www/license.html"));
+        urlField.setText(configuration.get("url", "/Users/jona/AboutHandler.php"));
         usernameField.setText(configuration.get("username", ""));
         passwordField.setText(Rot13.rot13(configuration.get("password", "")));
         rememberPasswordCheckBox.setSelected(configuration.getBoolean("rememberPassword", true));
