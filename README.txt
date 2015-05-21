@@ -1,31 +1,27 @@
-This is a README.txt file for the SVN Time-Lapse View revision browser.
+This is a README.txt file for the Git Time-Lapse View revision browser.
 
 
 DESCRIPTION
 
-SVN Time-Lapse View is a cross-platform viewer that downloads all revisions of a
+Git Time-Lapse View is a cross-platform viewer that downloads all revisions of a
 file and lets you scroll through them by dragging a slider. As you scroll, you
 are shown a visual diff of the current revision and the previous revision. Thus
 you can see how a file evolved, and you can easily find the revision at which
 lines appeared, disappeared, or changed.
 
-Time-Lapse View is a powerful visual alternative to the Subversion "blame"
+Time-Lapse View is a powerful visual alternative to the Git "blame"
 command. It is inspired by the excellent Time-Lapse View in the Perforce
 version-control system.
 
 
 USAGE
 
-To start the program, simply double-click SvnTimeLapseView.jar or type java -jar
-SvnTimeLapseView.jar at a command prompt. The SVN Time-Lapse View window will
+To start the program, simply double-click GitTimeLapseView.jar or type java -jar
+GitTimeLapseView.jar at a command prompt. The Git Time-Lapse View window will
 appear.
 
 Now let's examine all of the revisions of one of your files. In the "File
-Path/URL" field, enter the file's SVN URL, for example,
-
-    http://svn.myproject.com/repos/svnkit/trunk/myfile.php
-
-or the path to the file in your Subversion workspace, like
+Path/URL" field, enter the path to the file in your Git repository, like
 
     C:\svn\myproject\trunk\myfile.php
 
@@ -83,20 +79,13 @@ LIBRARIES
 
 The author gratefully acknowledges the use of the following libraries.
 
-    - SVNKit. Subversion client library. http://svnkit.com/
+    - JGit. Git client library. https://eclipse.org/jgit/
     - Apache Commons Lang. Java utility functions. http://commons.apache.org/
     - JArgs. Command-line parsing. http://jargs.sourceforge.net/
     - OpenJUMP (author's past project). Various Java snippets. http://openjump.org/
     - Java Diff. Diff algorithm. http://www.incava.org/projects/java/java-diff/
     - FatJar. Easy single-jar deployment. http://fjep.sourceforge.net/
-
-
-RESOURCES
-
-Web Site: http://code.google.com/p/svn-time-lapse-view/
-Issue Tracker: http://code.google.com/p/svn-time-lapse-view/issues/list
-Source Code: http://code.google.com/p/svn-time-lapse-view/source
-FatJar (easy single-jar deployment): http://fjep.sourceforge.net/
+    - svn-time-lapse-view. The original. https://github.com/JonathanAquino/svn-time-lapse-view
 
 
 CONTACTS
