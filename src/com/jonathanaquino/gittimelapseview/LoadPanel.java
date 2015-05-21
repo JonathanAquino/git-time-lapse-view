@@ -173,7 +173,7 @@ public class LoadPanel extends JPanel {
         usernameField.setText(configuration.get("username", ""));
         passwordField.setText(Rot13.rot13(configuration.get("password", "")));
         rememberPasswordCheckBox.setSelected(configuration.getBoolean("rememberPassword", true));
-        limitField.setText(configuration.get("limit", "100"));
+        limitField.setText(configuration.get("limit", "10000"));
     }
     
     /**

@@ -111,6 +111,9 @@ public class SvnLoader {
                                                revCommit.getFullMessage(), 
                                                content));
                     loadedCount++;
+                    if (loadedCount == limit) {
+                        break;
+                    }
                 }
                 Collections.reverse(revisions);
             } finally {
