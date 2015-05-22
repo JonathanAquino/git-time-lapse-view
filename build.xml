@@ -1,0 +1,61 @@
+<!-- Based on http://www.mkyong.com/ant/ant-create-a-fat-jar-file/ -->
+<project name="git-time-lapse-view" default="main" basedir=".">
+    <description>
+        Built git-time-lapse-view.
+    </description>
+
+    <property name="projectName" value="git-time-lapse-view" />
+    <property name="src.dir" location="src" />
+    <property name="build.dir" location="bin" />
+    <property name="dist.dir" location="dist" />
+    <property name="dist.lib.dir" location="dist/lib" />
+    <property name="lib.dir" value="lib" />
+    <property name="main-class" value="com.jonathanaquino.gittimelapseview.Application" />
+
+    <target name="init">
+        <mkdir dir="${build.dir}" />
+    </target>
+
+    <path id="classpath">
+        <fileset dir="${basedir}/">
+            <include name="${lib.dir}/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Need classpath to run this -->
+    <target name="compile" depends="init" description="compile the source ">
+        <javac includeantruntime="false" srcdir="${src.dir}"
+                       destdir="${build.dir}" classpathref="classpath" />
+    </target>
+
+    <!-- Group all dependencies into a big dependency-all.jar -->
+    <target name="copy-dependencies">
+        <mkdir dir="${dist.lib.dir}" />
+        <jar jarfile="${dist.lib.dir}/dependencies-all.jar">
+            <zipgroupfileset dir="${lib.dir}">
+                <include name="**/*.jar" />
+            </zipgroupfileset>
+        </jar>
+    </target>
+
+    <!-- jar it, extract above dependency-all.jar and zip it with project files -->
+    <target name="jar" depends="compile, copy-dependencies" description="package, output to JAR">
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${dist.lib.dir}" />
+        <jar jarfile="${dist.dir}/${projectName}.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}" />
+            </manifest>
+            <zipfileset src="${dist.lib.dir}/dependencies-all.jar" excludes="META-INF/*.SF" />
+        </jar>
+    </target>
+
+    <target name="clean" description="clean up">
+        <delete dir="${build.dir}" />
+        <delete dir="${dist.dir}" />
+    </target>
+
+    <!-- Default, run this -->
+    <target name="main" depends="clean, compile, jar" />
+
+</project>
