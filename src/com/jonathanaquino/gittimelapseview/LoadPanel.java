@@ -185,7 +185,7 @@ public class LoadPanel extends JPanel {
     private JFileChooser getFileChooser() {
         if (fileChooser == null) {
               fileChooser = GuiHelper.createJFileChooserWithExistenceChecking();
-              fileChooser.setDialogTitle("Select Workspace File");
+              fileChooser.setDialogTitle("Select File");
               fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
               fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
               fileChooser.setMultiSelectionEnabled(false);
