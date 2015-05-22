@@ -25,9 +25,9 @@ import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
 
 
 /**
- * Loads revisions from a subversion repository.
+ * Loads revisions from a Git repository.
  */
-public class SvnLoader {
+public class GitLoader {
 
     /** Whether revisions are currently being downloaded. */
     private volatile boolean loading = false;
@@ -47,7 +47,7 @@ public class SvnLoader {
     /**
      * Builds a list of revisions for the given file, using a thread.
      *
-     * @param filePathOrUrl  Subversion URL or working-copy file path
+     * @param filePathOrUrl  Git URL or working-copy file path
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
@@ -69,7 +69,7 @@ public class SvnLoader {
     /**
      * Builds a list of revisions for the given file.
      *
-     * @param filePathOrUrl  Subversion URL or working-copy file path
+     * @param filePathOrUrl  Git URL or working-copy file path
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
@@ -155,7 +155,7 @@ public class SvnLoader {
     /**
      * Returns whether revisions are currently being downloaded.
      *
-     * @return  whether the SvnLoader is loading revisions
+     * @return  whether the GitLoader is loading revisions
      */
     public boolean isLoading() {
         return loading;

@@ -87,7 +87,7 @@ public class Configuration {
     private void save() throws Exception {
         if (! filePathSpecified()) { return; }
         FileOutputStream outputStream = new FileOutputStream(filePath);
-        properties.store(outputStream, "Configuration properties for SVN Time Lapse View");
+        properties.store(outputStream, "Configuration properties for Git Time Lapse View");
         outputStream.close();
     }
 

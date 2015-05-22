@@ -29,7 +29,7 @@ public class Application {
         parser.parse(args);
         String filePathOrUrl = parser.getRemainingArgs().length > 0 ? parser.getRemainingArgs()[0] : null;
         String configFilePath = (String) parser.getOptionValue(configOption);
-        if (configFilePath == null) { configFilePath = FileSystemView.getFileSystemView().getDefaultDirectory() + File.separator + "svn_time_lapse_view.ini"; }
+        if (configFilePath == null) { configFilePath = FileSystemView.getFileSystemView().getDefaultDirectory() + File.separator + "git_time_lapse_view.ini"; }
         String limitString = (String) parser.getOptionValue(limitOption);
         int limit = limitString == null ? 100 : Integer.parseInt(limitString);
         new ApplicationWindow(new Application(new Configuration(configFilePath)), filePathOrUrl, limit).setVisible(true);
@@ -54,8 +54,8 @@ public class Application {
     /** Configuration properties */
     private Configuration configuration;
 
-    /** Loads revisions from a subversion repository. */
-    private SvnLoader loader = new SvnLoader();
+    /** Loads revisions from a Git repository. */
+    private GitLoader loader = new GitLoader();
 
     /** Cache of revision Diffs, keyed by "revision-number-1, revision-number-2" */
     private Map diffCache = new HashMap();
@@ -100,7 +100,7 @@ public class Application {
     /**
      * Loads the revisions for the specified file.
      *
-     * @param filePathOrUrl  Subversion URL or working-copy file path
+     * @param filePathOrUrl  Git URL or working-copy file path
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
@@ -127,11 +127,11 @@ public class Application {
     }
 
     /**
-     * Returns the Subversion revision loader.
+     * Returns the Git revision loader.
      *
      * @return the object that downloads revisions
      */
-    public SvnLoader getLoader() {
+    public GitLoader getLoader() {
         return loader;
     }
 

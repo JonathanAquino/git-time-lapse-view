@@ -29,7 +29,7 @@ public class LoadPanel extends JPanel {
     /** Button that initiates the load. */
     JButton loadButton = new JButton("Load");
 
-    /** Text field for entering the Subversion URL for the file. */
+    /** Text field for entering the Git URL for the file. */
     private JTextField urlField = GuiHelper.pressOnEnterKey(new JTextField(30), loadButton);
 
     /** Text field for entering the maximum number of revisions to retrieve. */
@@ -151,7 +151,7 @@ public class LoadPanel extends JPanel {
         statusLabel.setText("Loading...");
         progressBar.setValue(0);
         ((CardLayout) getLayout()).show(this, "progress-panel");
-        final SvnLoader loader = applicationWindow.getApplication().getLoader();
+        final GitLoader loader = applicationWindow.getApplication().getLoader();
         final Timer timer = new Timer(500, new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {

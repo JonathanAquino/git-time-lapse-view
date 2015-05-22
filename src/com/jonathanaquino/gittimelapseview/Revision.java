@@ -1,7 +1,7 @@
 package com.jonathanaquino.gittimelapseview;
 
 /**
- * A revision of a file in Subversion
+ * A revision of a file in Git
  */
 public class Revision {
 
@@ -31,7 +31,7 @@ public class Revision {
     /**
      * Returns the number identifying this revision.
      *
-     * @return the value from Subversion
+     * @return the value from Git
      */
     public String getRevisionNumber() {
         return revisionNumber;
@@ -40,7 +40,7 @@ public class Revision {
     /**
      * Returns the username of the person who submitted this revision.
      *
-     * @return the value from Subversion
+     * @return the value from Git
      */
     public String getAuthor() {
         return author;
@@ -49,7 +49,7 @@ public class Revision {
     /**
      * Returns the date on which the revision was submitted.
      *
-     * @return the value from Subversion
+     * @return the value from Git
      */
     public String getDate() {
         return date;
@@ -58,7 +58,7 @@ public class Revision {
     /**
      * Returns the log message accompanying the submission of this revision.
      *
-     * @return the value from Subversion
+     * @return the value from Git
      */
     public String getLogMessage() {
         return logMessage;
@@ -67,7 +67,7 @@ public class Revision {
     /**
      * Returns the contents of the file that was submitted.
      *
-     * @return the value from Subversion
+     * @return the value from Git
      */
     public String getContents() {
         return contents;

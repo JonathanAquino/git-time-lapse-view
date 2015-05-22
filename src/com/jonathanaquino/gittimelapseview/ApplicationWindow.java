@@ -89,7 +89,7 @@ public class ApplicationWindow extends JFrame {
      * Creates a new ViewerFrame.
      *
      * @param application  the top-level object in the program.
-     * @param filePathOrUrl  Subversion URL or working-copy file path
+     * @param filePathOrUrl  Git URL or working-copy file path
      * @param limit  maximum number of revisions to download
      */
     public ApplicationWindow(Application application, final String filePathOrUrl, final int limit) throws Exception {
@@ -110,7 +110,7 @@ public class ApplicationWindow extends JFrame {
      * Sets up the GUI components.
      */
     private void initialize() throws Exception {
-        setTitle("SVN Time-Lapse View");
+        setTitle("Git Time-Lapse View");
         initializeWindowPosition();
         getContentPane().setLayout(new BorderLayout());
         addWindowListener(new WindowAdapter() {
@@ -284,7 +284,7 @@ public class ApplicationWindow extends JFrame {
     /**
      * Loads the revisions for the specified file.
      *
-     * @param filePathOrUrl  Subversion URL or working-copy file path
+     * @param filePathOrUrl  Git URL or working-copy file path
      * @param limit  maximum number of revisions to download
      */
     public void load(final String filePathOrUrl, final int limit) throws Exception {
