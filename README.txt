@@ -13,6 +13,11 @@ Time-Lapse View is a powerful visual alternative to the Git "blame"
 command. It is inspired by the excellent Time-Lapse View in the Perforce
 version-control system.
 
+![Screenshot 1](http://farm3.static.flickr.com/2108/1587747884_5806f7463f_o.png)
+
+Git Time-Lapse View runs on Windows, Mac, Linux, and any platform that runs Java.
+
+![Screenshot 2](http://farm3.static.flickr.com/2017/1608790277_75f459f76e.jpg)
 
 USAGE
 
