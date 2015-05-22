@@ -27,12 +27,12 @@ public class Application {
         CmdLineParser.Option configOption = parser.addStringOption("config");
         CmdLineParser.Option limitOption = parser.addStringOption("limit");
         parser.parse(args);
-        String filePathOrUrl = parser.getRemainingArgs().length > 0 ? parser.getRemainingArgs()[0] : null;
+        String filePath = parser.getRemainingArgs().length > 0 ? parser.getRemainingArgs()[0] : null;
         String configFilePath = (String) parser.getOptionValue(configOption);
         if (configFilePath == null) { configFilePath = FileSystemView.getFileSystemView().getDefaultDirectory() + File.separator + "git_time_lapse_view.ini"; }
         String limitString = (String) parser.getOptionValue(limitOption);
         int limit = limitString == null ? 100 : Integer.parseInt(limitString);
-        new ApplicationWindow(new Application(new Configuration(configFilePath)), filePathOrUrl, limit).setVisible(true);
+        new ApplicationWindow(new Application(new Configuration(configFilePath)), filePath, limit).setVisible(true);
     }
 
 
@@ -100,12 +100,12 @@ public class Application {
     /**
      * Loads the revisions for the specified file.
      *
-     * @param filePathOrUrl  Git URL or working-copy file path
+     * @param filePath  Git file path
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
-    public void load(String filePathOrUrl, int limit, final Closure afterLoad) throws Exception {
-        loader.loadRevisions(filePathOrUrl, limit, new Closure() {
+    public void load(String filePath, int limit, final Closure afterLoad) throws Exception {
+        loader.loadRevisions(filePath, limit, new Closure() {
             public void execute() throws Exception {
                 List revisions = loader.getRevisions();
                 if (revisions.size() == 0) { throw new Exception("No revisions found"); }

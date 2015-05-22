@@ -29,8 +29,8 @@ public class LoadPanel extends JPanel {
     /** Button that initiates the load. */
     JButton loadButton = new JButton("Load");
 
-    /** Text field for entering the Git URL for the file. */
-    private JTextField urlField = GuiHelper.pressOnEnterKey(new JTextField(30), loadButton);
+    /** Text field for entering the file path. */
+    private JTextField filePathField = GuiHelper.pressOnEnterKey(new JTextField(30), loadButton);
 
     /** Text field for entering the maximum number of revisions to retrieve. */
     private JTextField limitField = GuiHelper.pressOnEnterKey(new JTextField(5), loadButton);
@@ -91,10 +91,10 @@ public class LoadPanel extends JPanel {
      */
     private void initializeFieldPanel() {
         final Configuration configuration = applicationWindow.getApplication().getConfiguration();
-        JLabel urlLabel = new JLabel("File Path:");
-        urlLabel.setToolTipText("The file path");
-        fieldPanel.add(urlLabel);
-        fieldPanel.add(urlField);
+        JLabel filePathLabel = new JLabel("File Path:");
+        filePathLabel.setToolTipText("The file path");
+        fieldPanel.add(filePathLabel);
+        fieldPanel.add(filePathField);
         fieldPanel.add(createBrowseButton());
         JLabel limitLabel = new JLabel("Limit:");
         limitLabel.setToolTipText("Maximum number of revisions to retrieve");
@@ -104,7 +104,7 @@ public class LoadPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        applicationWindow.load(urlField.getText(), Integer.parseInt(limitField.getText()));
+                        applicationWindow.load(filePathField.getText(), Integer.parseInt(limitField.getText()));
                     }
                 });
             }
@@ -121,11 +121,11 @@ public class LoadPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        File directory = new File(urlField.getText()).getParentFile();
+                        File directory = new File(filePathField.getText()).getParentFile();
                         if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
                         if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
-                            urlField.setText(getFileChooser().getSelectedFile().getPath());
-                            applicationWindow.load(urlField.getText(), Integer.parseInt(limitField.getText()));
+                            filePathField.setText(getFileChooser().getSelectedFile().getPath());
+                            applicationWindow.load(filePathField.getText(), Integer.parseInt(limitField.getText()));
                         }
                     }
                 });
@@ -135,12 +135,12 @@ public class LoadPanel extends JPanel {
     }
 
     /**
-     * Reads the URL and limit values from the configuration.
+     * Reads the file path and limit values from the configuration.
      *
      * @param configuration  configuration properties
      */
     public void read(Configuration configuration) {
-        urlField.setText(configuration.get("url", "/Users/jona/AboutHandler.php"));
+        filePathField.setText(configuration.get("filePath", "/Users/jona/AboutHandler.php"));
         limitField.setText(configuration.get("limit", "10000"));
     }
     

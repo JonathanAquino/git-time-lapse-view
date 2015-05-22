@@ -47,18 +47,18 @@ public class GitLoader {
     /**
      * Builds a list of revisions for the given file, using a thread.
      *
-     * @param filePathOrUrl  Git URL or working-copy file path
+     * @param filePath  Git file path
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
-    public void loadRevisions(final String filePathOrUrl, final int limit, final Closure afterLoad) throws Exception {
+    public void loadRevisions(final String filePath, final int limit, final Closure afterLoad) throws Exception {
         loading = true;
         cancelled = false;
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        loadRevisionsProper(filePathOrUrl, limit, afterLoad);
+                        loadRevisionsProper(filePath, limit, afterLoad);
                     }
                 });
             }
@@ -69,18 +69,18 @@ public class GitLoader {
     /**
      * Builds a list of revisions for the given file.
      *
-     * @param filePathOrUrl  Git URL or working-copy file path
+     * @param filePath  Git file path
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
-    private void loadRevisionsProper(String filePathOrUrl, int limit, Closure afterLoad) throws Exception {
+    private void loadRevisionsProper(String filePath, int limit, Closure afterLoad) throws Exception {
         try {
             loadedCount = totalCount = 0;
             FileRepositoryBuilder builder = new FileRepositoryBuilder();
-            Repository repository = builder.readEnvironment().findGitDir(new File(filePathOrUrl)).build();
+            Repository repository = builder.readEnvironment().findGitDir(new File(filePath)).build();
             try {
                 // From http://stackoverflow.com/a/205655/2391566
-                String relativePath = repository.getDirectory().getParentFile().toURI().relativize(new File(filePathOrUrl).toURI()).getPath();
+                String relativePath = repository.getDirectory().getParentFile().toURI().relativize(new File(filePath).toURI()).getPath();
                 Git git = new Git(repository);
                 Iterable<RevCommit> log = git.log().addPath(relativePath).call();
                 revisions = new ArrayList();

@@ -89,17 +89,17 @@ public class ApplicationWindow extends JFrame {
      * Creates a new ViewerFrame.
      *
      * @param application  the top-level object in the program.
-     * @param filePathOrUrl  Git URL or working-copy file path
+     * @param filePath  Git file path
      * @param limit  maximum number of revisions to download
      */
-    public ApplicationWindow(Application application, final String filePathOrUrl, final int limit) throws Exception {
+    public ApplicationWindow(Application application, final String filePath, final int limit) throws Exception {
         this.application = application;
         initialize();
         addComponentListener(new ComponentAdapter() {
             public void componentShown(ComponentEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        if (filePathOrUrl != null) { load(filePathOrUrl, limit); }
+                        if (filePath != null) { load(filePath, limit); }
                     }
                 });
             }
@@ -284,20 +284,20 @@ public class ApplicationWindow extends JFrame {
     /**
      * Loads the revisions for the specified file.
      *
-     * @param filePathOrUrl  Git URL or working-copy file path
+     * @param filePath  Git file path
      * @param limit  maximum number of revisions to download
      */
-    public void load(final String filePathOrUrl, final int limit) throws Exception {
-        application.load(filePathOrUrl, limit, new Closure() {
+    public void load(final String filePath, final int limit) throws Exception {
+        application.load(filePath, limit, new Closure() {
             public void execute() throws Exception {
                 GuiHelper.invokeOnEventThread(new Runnable() {
                     public void run() {
                         MiscHelper.handleExceptions(new Closure() {
                             public void execute() throws Exception {
-                                setTitle(filePathOrUrl);
+                                setTitle(filePath);
                                 setHorizontalScrollBarValue(0);
                                 setVerticalScrollBarValue(0);
-                                application.getConfiguration().set("url", filePathOrUrl);
+                                application.getConfiguration().set("filePath", filePath);
                                 application.getConfiguration().setInt("limit", limit);
                                 loadPanel.read(application.getConfiguration());
                                 slider.setMinimum(1);
