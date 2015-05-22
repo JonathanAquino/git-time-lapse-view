@@ -24,21 +24,15 @@ public class Application {
     public static void main(String[] args) throws Exception {
         initializeLookAndFeel();
         CmdLineParser parser = new CmdLineParser();
-        CmdLineParser.Option usernameOption = parser.addStringOption("username");
-        CmdLineParser.Option passwordOption = parser.addStringOption("password");
         CmdLineParser.Option configOption = parser.addStringOption("config");
         CmdLineParser.Option limitOption = parser.addStringOption("limit");
         parser.parse(args);
         String filePathOrUrl = parser.getRemainingArgs().length > 0 ? parser.getRemainingArgs()[0] : null;
         String configFilePath = (String) parser.getOptionValue(configOption);
         if (configFilePath == null) { configFilePath = FileSystemView.getFileSystemView().getDefaultDirectory() + File.separator + "svn_time_lapse_view.ini"; }
-        String username = (String) parser.getOptionValue(usernameOption);
-        if (username == null) { username = ""; }
-        String password = (String) parser.getOptionValue(passwordOption);
-        if (password == null) { password = ""; }
         String limitString = (String) parser.getOptionValue(limitOption);
         int limit = limitString == null ? 100 : Integer.parseInt(limitString);
-        new ApplicationWindow(new Application(new Configuration(configFilePath)), filePathOrUrl, username, password, limit).setVisible(true);
+        new ApplicationWindow(new Application(new Configuration(configFilePath)), filePathOrUrl, limit).setVisible(true);
     }
 
 
@@ -107,13 +101,11 @@ public class Application {
      * Loads the revisions for the specified file.
      *
      * @param filePathOrUrl  Subversion URL or working-copy file path
-     * @param username  username, or an empty string for anonymous
-     * @param password  password, or an empty string for anonymous
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
-    public void load(String filePathOrUrl, String username, String password, int limit, final Closure afterLoad) throws Exception {
-        loader.loadRevisions(filePathOrUrl, username, password, limit, new Closure() {
+    public void load(String filePathOrUrl, int limit, final Closure afterLoad) throws Exception {
+        loader.loadRevisions(filePathOrUrl, limit, new Closure() {
             public void execute() throws Exception {
                 List revisions = loader.getRevisions();
                 if (revisions.size() == 0) { throw new Exception("No revisions found"); }

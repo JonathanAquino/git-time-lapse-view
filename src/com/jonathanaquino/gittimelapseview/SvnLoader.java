@@ -48,19 +48,17 @@ public class SvnLoader {
      * Builds a list of revisions for the given file, using a thread.
      *
      * @param filePathOrUrl  Subversion URL or working-copy file path
-     * @param username  username, or null for anonymous
-     * @param password  password, or null for anonymous
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
-    public void loadRevisions(final String filePathOrUrl, final String username, final String password, final int limit, final Closure afterLoad) throws Exception {
+    public void loadRevisions(final String filePathOrUrl, final int limit, final Closure afterLoad) throws Exception {
         loading = true;
         cancelled = false;
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        loadRevisionsProper(filePathOrUrl, username, password, limit, afterLoad);
+                        loadRevisionsProper(filePathOrUrl, limit, afterLoad);
                     }
                 });
             }
@@ -72,12 +70,10 @@ public class SvnLoader {
      * Builds a list of revisions for the given file.
      *
      * @param filePathOrUrl  Subversion URL or working-copy file path
-     * @param username  username, or null for anonymous
-     * @param password  password, or null for anonymous
      * @param limit  maximum number of revisions to download
      * @param afterLoad  operation to run after the load finishes
      */
-    private void loadRevisionsProper(String filePathOrUrl, String username, String password, int limit, Closure afterLoad) throws Exception {
+    private void loadRevisionsProper(String filePathOrUrl, int limit, Closure afterLoad) throws Exception {
         try {
             loadedCount = totalCount = 0;
             FileRepositoryBuilder builder = new FileRepositoryBuilder();

@@ -13,7 +13,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.Timer;
@@ -23,7 +22,7 @@ import com.jonathanaquino.gittimelapseview.helpers.MiscHelper;
 import com.jonathanaquino.gittimelapseview.helpers.Rot13;
 
 /**
- * A panel that prompts the user to enter a file path, username, and password.
+ * A panel that prompts the user to enter a file path.
  */
 public class LoadPanel extends JPanel {
     
@@ -32,15 +31,6 @@ public class LoadPanel extends JPanel {
 
     /** Text field for entering the Subversion URL for the file. */
     private JTextField urlField = GuiHelper.pressOnEnterKey(new JTextField(30), loadButton);
-
-    /** Text field for entering an SVN username. */
-    private JTextField usernameField = GuiHelper.pressOnEnterKey(new JTextField(10), loadButton);
-
-    /** Text field for entering an SVN password. */
-    private JPasswordField passwordField = (JPasswordField) GuiHelper.pressOnEnterKey(new JPasswordField(10), loadButton);
-    
-    /** Checkbox for whether to save the password. */
-    private JCheckBox rememberPasswordCheckBox = new JCheckBox("Remember Pw");
 
     /** Text field for entering the maximum number of revisions to retrieve. */
     private JTextField limitField = GuiHelper.pressOnEnterKey(new JTextField(5), loadButton);
@@ -110,30 +100,11 @@ public class LoadPanel extends JPanel {
         limitLabel.setToolTipText("Maximum number of revisions to retrieve");
         fieldPanel.add(limitLabel);
         fieldPanel.add(limitField);
-        JLabel usernameLabel = new JLabel("User:");
-        usernameLabel.setToolTipText("Your username (if any)");
-        fieldPanel.add(usernameLabel);
-        fieldPanel.add(usernameField);
-        JLabel passwordLabel = new JLabel("Pw:");
-        passwordLabel.setToolTipText("Your password (if any)");
-        fieldPanel.add(passwordLabel);
-        fieldPanel.add(passwordField);
-        rememberPasswordCheckBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                MiscHelper.handleExceptions(new Closure() {
-                    public void execute() throws Exception {
-                        applicationWindow.setPassword(new String(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), configuration);
-                    }
-                });
-            }
-        });
-        rememberPasswordCheckBox.setToolTipText("Save the password for next time");
-        fieldPanel.add(rememberPasswordCheckBox);
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
+                        applicationWindow.load(urlField.getText(), Integer.parseInt(limitField.getText()));
                     }
                 });
             }
@@ -154,7 +125,7 @@ public class LoadPanel extends JPanel {
                         if (directory != null && directory.exists()) { getFileChooser().setCurrentDirectory(directory); }
                         if (JFileChooser.APPROVE_OPTION == getFileChooser().showOpenDialog(applicationWindow)) {
                             urlField.setText(getFileChooser().getSelectedFile().getPath());
-                            applicationWindow.load(urlField.getText(), usernameField.getText(), String.valueOf(passwordField.getPassword()), rememberPasswordCheckBox.isSelected(), Integer.parseInt(limitField.getText()));
+                            applicationWindow.load(urlField.getText(), Integer.parseInt(limitField.getText()));
                         }
                     }
                 });
@@ -164,15 +135,12 @@ public class LoadPanel extends JPanel {
     }
 
     /**
-     * Reads the URL, username, and limit values from the configuration.
+     * Reads the URL and limit values from the configuration.
      *
      * @param configuration  configuration properties
      */
     public void read(Configuration configuration) {
         urlField.setText(configuration.get("url", "/Users/jona/AboutHandler.php"));
-        usernameField.setText(configuration.get("username", ""));
-        passwordField.setText(Rot13.rot13(configuration.get("password", "")));
-        rememberPasswordCheckBox.setSelected(configuration.getBoolean("rememberPassword", true));
         limitField.setText(configuration.get("limit", "10000"));
     }
     

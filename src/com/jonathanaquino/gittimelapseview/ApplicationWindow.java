@@ -82,7 +82,7 @@ public class ApplicationWindow extends JFrame {
     /** Number of freeze requests for the vertical scroll bars */
     private int verticalScrollBarLocks = 0;
     
-    /** The panel that prompts the user to enter a file path, username, and password. */
+    /** The panel that prompts the user to enter a file path. */
     private LoadPanel loadPanel;
 
     /**
@@ -90,18 +90,16 @@ public class ApplicationWindow extends JFrame {
      *
      * @param application  the top-level object in the program.
      * @param filePathOrUrl  Subversion URL or working-copy file path
-     * @param username  username, or an empty string for anonymous
-     * @param password  password, or an empty string for anonymous
      * @param limit  maximum number of revisions to download
      */
-    public ApplicationWindow(Application application, final String filePathOrUrl, final String username, final String password, final int limit) throws Exception {
+    public ApplicationWindow(Application application, final String filePathOrUrl, final int limit) throws Exception {
         this.application = application;
         initialize();
         addComponentListener(new ComponentAdapter() {
             public void componentShown(ComponentEvent e) {
                 MiscHelper.handleExceptions(new Closure() {
                     public void execute() throws Exception {
-                        if (filePathOrUrl != null) { load(filePathOrUrl, username, password, false, limit); }
+                        if (filePathOrUrl != null) { load(filePathOrUrl, limit); }
                     }
                 });
             }
@@ -287,13 +285,10 @@ public class ApplicationWindow extends JFrame {
      * Loads the revisions for the specified file.
      *
      * @param filePathOrUrl  Subversion URL or working-copy file path
-     * @param username  username, or an empty string for anonymous
-     * @param password  password, or an empty string for anonymous
-     * @param rememberPassword  whether to save the password in the configuration file
      * @param limit  maximum number of revisions to download
      */
-    public void load(final String filePathOrUrl, final String username, final String password, final boolean rememberPassword, final int limit) throws Exception {
-        application.load(filePathOrUrl, username, password, limit, new Closure() {
+    public void load(final String filePathOrUrl, final int limit) throws Exception {
+        application.load(filePathOrUrl, limit, new Closure() {
             public void execute() throws Exception {
                 GuiHelper.invokeOnEventThread(new Runnable() {
                     public void run() {
@@ -303,9 +298,7 @@ public class ApplicationWindow extends JFrame {
                                 setHorizontalScrollBarValue(0);
                                 setVerticalScrollBarValue(0);
                                 application.getConfiguration().set("url", filePathOrUrl);
-                                application.getConfiguration().set("username", username);
                                 application.getConfiguration().setInt("limit", limit);
-                                setPassword(password, rememberPassword, application.getConfiguration());
                                 loadPanel.read(application.getConfiguration());
                                 slider.setMinimum(1);
                                 slider.setMaximum(application.getRevisions().size() - 1);
@@ -318,18 +311,6 @@ public class ApplicationWindow extends JFrame {
             }
         });
         loadPanel.showProgressPanel();
-    }
-    
-    /**
-     * Updates the password stored in the configuration file.
-     * 
-     * @param password  the password
-     * @param rememberPassword  whether to store the password or an empty string
-     * @param configuration  the configuration file
-     */
-    public void setPassword(String password, boolean rememberPassword, final Configuration configuration) throws Exception {
-        configuration.set("password", rememberPassword ? Rot13.rot13(password) : "");
-        configuration.setBoolean("rememberPassword", rememberPassword);
     }
     
     /**
