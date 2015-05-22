@@ -1,8 +1,3 @@
-This is a README.txt file for the Git Time-Lapse View revision browser.
-
-
-DESCRIPTION
-
 Git Time-Lapse View is a cross-platform viewer that downloads all revisions of a
 file and lets you scroll through them by dragging a slider. As you scroll, you
 are shown a visual diff of the current revision and the previous revision. Thus
@@ -19,7 +14,7 @@ Git Time-Lapse View runs on Windows, Mac, Linux, and any platform that runs Java
 
 ![Screenshot 2](http://farm3.static.flickr.com/2017/1608790277_75f459f76e.jpg)
 
-USAGE
+# Usage
 
 To start the program, simply double-click GitTimeLapseView.jar or type java -jar
 GitTimeLapseView.jar at a command prompt. The Git Time-Lapse View window will
@@ -56,7 +51,7 @@ fields if necessary. Then press the "..." button. A file dialog or
 repository-browser dialog will appear, allowing you to choose a file.
 
 
-BUILD INSTRUCTIONS
+# Build Instructions
 
 1. Open your favorite Java IDE.
 2. Add src and test as source paths.
@@ -64,7 +59,7 @@ BUILD INSTRUCTIONS
 4. Run com.jonathanaquino.gittimelapseview.Application.
 
 
-LICENSING
+# License
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -80,7 +75,7 @@ this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
-LIBRARIES
+# Libraries
 
 The author gratefully acknowledges the use of the following libraries.
 
@@ -93,7 +88,7 @@ The author gratefully acknowledges the use of the following libraries.
     - svn-time-lapse-view. The original. https://github.com/JonathanAquino/svn-time-lapse-view
 
 
-CONTACTS
+# Contact
 
 Jonathan Aquino  -  jonathan.aquino@gmail.com  -  http://jonathanaquino.com
 Kim Tiedemann  -  http://www.tiede.dk:8080/roller/kim/
