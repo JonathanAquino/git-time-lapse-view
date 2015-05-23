@@ -6,7 +6,9 @@
 
     <property name="projectName" value="git-time-lapse-view" />
     <property name="src.dir" location="src" />
+    <property name="test.dir" location="test" />
     <property name="build.dir" location="bin" />
+    <property name="build.test.dir" location="bin/test" />
     <property name="dist.dir" location="dist" />
     <property name="dist.lib.dir" location="dist/lib" />
     <property name="lib.dir" value="lib" />
@@ -14,21 +16,39 @@
 
     <target name="init">
         <mkdir dir="${build.dir}" />
+        <mkdir dir="${build.test.dir}" />
     </target>
 
     <path id="classpath">
+        <pathelement location="lib/test/junit-4.12.jar" />
+        <pathelement location="lib/test/hamcrest-core-1.3.jar" />
         <fileset dir="${basedir}/">
             <include name="${lib.dir}/*.jar" />
         </fileset>
+        <pathelement location="${build.dir}"/>
     </path>
 
-    <!-- Need classpath to run this -->
+    <!-- Generate class files into bin directory. -->
     <target name="compile" depends="init" description="compile the source ">
         <javac includeantruntime="false" srcdir="${src.dir}"
                        destdir="${build.dir}" classpathref="classpath" />
+        <javac includeantruntime="false" srcdir="${test.dir}"
+                       destdir="${build.test.dir}" classpathref="classpath" />
     </target>
 
-    <!-- Group all dependencies into a big dependency-all.jar -->
+    <target name="junit" depends="compile">
+        <junit printsummary="yes">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${build.test.dir}"/>
+            </classpath>
+            <batchtest fork="yes">
+                <fileset dir="${src.dir}" includes="*Test.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <!-- Zip up lib/*.jar into dist/lib/dependencies-all.jar -->
     <target name="copy-dependencies">
         <mkdir dir="${dist.lib.dir}" />
         <jar jarfile="${dist.lib.dir}/dependencies-all.jar">
@@ -38,7 +58,7 @@
         </jar>
     </target>
 
-    <!-- jar it, extract above dependency-all.jar and zip it with project files -->
+    <!-- Generate dist/git-time-lapse-view.jar -->
     <target name="jar" depends="compile, copy-dependencies" description="package, output to JAR">
         <mkdir dir="${dist.dir}" />
         <mkdir dir="${dist.lib.dir}" />
@@ -56,6 +76,6 @@
     </target>
 
     <!-- Default, run this -->
-    <target name="main" depends="clean, compile, jar" />
+    <target name="main" depends="clean, compile, junit, jar" />
 
 </project>
