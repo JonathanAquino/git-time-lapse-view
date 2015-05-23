@@ -71,7 +71,6 @@ The author gratefully acknowledges the use of the following libraries.
     - JArgs. Command-line parsing. http://jargs.sourceforge.net/
     - OpenJUMP (author's past project). Various Java snippets. http://openjump.org/
     - Java Diff. Diff algorithm. http://www.incava.org/projects/java/java-diff/
-    - FatJar. Easy single-jar deployment. http://fjep.sourceforge.net/
     - svn-time-lapse-view. The original. https://github.com/JonathanAquino/svn-time-lapse-view
 
 
