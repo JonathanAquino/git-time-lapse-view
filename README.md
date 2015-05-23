@@ -21,6 +21,9 @@ Download the program from the [Releases](https://github.com/JonathanAquino/git-t
 page. Then double-click GitTimeLapseView.jar or type java -jar git-time-lapse-view.jar
 at a command prompt. The Git Time-Lapse View window will appear.
 
+Mac users: If you get a message about the app not opening "because it is from
+an unidentifed developer", try Control-clicking the icon, then clicking Open.
+
 
 ## Usage
 
