@@ -416,7 +416,7 @@ public class ApplicationWindow extends JFrame {
      * @param revision  the revision to display
      */
     private void updateMetadataTextArea(JTextArea metadataTextArea, Revision revision) {
-        metadataTextArea.setText("Rev " + revision.getRevisionNumber() + ", "
+        metadataTextArea.setText(revision.getRevisionNumber() + " "
                 + "by " + revision.getAuthor() + ", "
                 + revision.getDate() + "\n"
                 + revision.getLogMessage().trim());

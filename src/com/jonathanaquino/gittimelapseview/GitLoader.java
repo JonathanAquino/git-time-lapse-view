@@ -101,7 +101,7 @@ public class GitLoader {
                     loader.copyTo(outputStream);                                                                          
                     String encoding = determineEncoding(outputStream.toByteArray());                
                     String content = encoding == null ? outputStream.toString() : outputStream.toString(encoding); 
-                    revisions.add(new Revision(revCommit.getName(), 
+                    revisions.add(new Revision(revCommit.getName().substring(0, 7), 
                                                revCommit.getAuthorIdent().getName(), 
                                                formatDate(revCommit.getCommitTime(), null), 
                                                revCommit.getFullMessage(), 
