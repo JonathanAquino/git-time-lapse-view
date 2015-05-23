@@ -8,6 +8,7 @@
     <property name="src.dir" location="src" />
     <property name="test.dir" location="test" />
     <property name="build.dir" location="bin" />
+    <property name="build.src.dir" location="bin/src" />
     <property name="build.test.dir" location="bin/test" />
     <property name="dist.dir" location="dist" />
     <property name="dist.lib.dir" location="dist/lib" />
@@ -28,12 +29,21 @@
         <pathelement location="${build.dir}"/>
     </path>
 
-    <!-- Generate class files into bin directory. -->
-    <target name="compile" depends="init" description="compile the source ">
-        <javac includeantruntime="false" srcdir="${src.dir}"
+    <target name="prompt-version">
+        <input message="Please enter version number (e.g., v1.0):" addproperty="version"/>
+    </target>
+
+    <!-- Copy src to bin/src, replace v0.0 with ${version}, then generate classes to bin. -->
+    <target name="compile" depends="prompt-version, init" description="compile the source ">
+        <copy todir="${build.src.dir}">
+            <fileset dir="${src.dir}"/>
+        </copy>
+        <replace file="${build.src.dir}/com/jonathanaquino/gittimelapseview/LoadPanel.java" token="v0.0" value="${version}"/>
+        <javac includeantruntime="false" srcdir="${build.src.dir}"
                        destdir="${build.dir}" classpathref="classpath" />
         <javac includeantruntime="false" srcdir="${test.dir}"
                        destdir="${build.test.dir}" classpathref="classpath" />
+        <delete dir="${build.src.dir}"/>
     </target>
 
     <target name="junit" depends="compile">
@@ -75,8 +85,8 @@
         <delete dir="${dist.dir}" />
     </target>
 
-    <target name="zip" depends="jar" description="Create final zip file">
-        <zip destfile="${dist.dir}/${projectName}.zip">
+    <target name="zip" depends="prompt-version, jar" description="Create final zip file">
+        <zip destfile="${dist.dir}/${projectName}-${version}.zip">
             <fileset dir="." includes="README.md"/>
             <fileset dir="." includes="gpl-2.0.txt"/>
             <fileset dir="dist" includes="${projectName}.jar"/>
@@ -84,6 +94,6 @@
     </target>
 
     <!-- Default, run this -->
-    <target name="main" depends="clean, compile, junit, jar, zip" />
+    <target name="main" depends="prompt-version, clean, compile, junit, jar, zip" />
 
 </project>

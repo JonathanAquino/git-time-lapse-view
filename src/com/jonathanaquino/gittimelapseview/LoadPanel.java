@@ -49,6 +49,9 @@ public class LoadPanel extends JPanel {
 
     /** The panel that displays the progress bar. */
     private JPanel progressPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    
+    /** Displays the current version. */
+    private JLabel versionLabel = new JLabel("v0.0");
 
     /** The dialog for browsing a filesystem. */
     private JFileChooser fileChooser = null;
@@ -110,6 +113,7 @@ public class LoadPanel extends JPanel {
             }
         });
         fieldPanel.add(loadButton);       
+        fieldPanel.add(versionLabel);        
         read(configuration);
     }
 
