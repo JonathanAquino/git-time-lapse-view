@@ -29,6 +29,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -82,8 +83,17 @@ public class ApplicationWindow extends JFrame {
     /** Number of freeze requests for the vertical scroll bars */
     private int verticalScrollBarLocks = 0;
     
+    /** Index of the current revision (on the right side), or -1 if no revision has been shown yet. */
+    private int currentRevisionIndex = -1;
+    
+    /** The current diff being viewed. */
+    private Diff currentDiff;
+    
     /** The panel that prompts the user to enter a file path. */
     private LoadPanel loadPanel;
+    
+    /** Function to call when the vertical scroll bar values are ready to be changed. */
+    private Closure onUnfreezeVerticalScrollBars;
 
     /**
      * Creates a new ViewerFrame.
@@ -317,11 +327,44 @@ public class ApplicationWindow extends JFrame {
      * Displays the revision corresponding to the current slider value.
      */
     public void loadRevision() throws Exception {
+        String lineNumberToPreserve = null;
+        int revisionDelta = slider.getValue() - currentRevisionIndex;
         if (searchPanel.isShowingDifferencesOnly()) {
             setHorizontalScrollBarValue(0);
             setVerticalScrollBarValue(0);
+        } else if (Math.abs(revisionDelta) == 1) {
+            // If the revision changes by one, then store the current line number 
+            // and try to scroll to keep it in view.
+            JViewport leftViewport = (JViewport) leftEditorPane.getParent();
+            int position = (int)Math.round(((float)leftViewport.getViewPosition().y / leftViewport.getViewSize().height) * currentDiff.getLeftLineNumbers().size());
+            List lineNumbers = revisionDelta == -1 ? currentDiff.getLeftLineNumbers() : currentDiff.getRightLineNumbers();
+            for (int i = position; i >= 0; i--) {
+                if (lineNumbers.get(i).toString().length() > 0) {
+                    lineNumberToPreserve = lineNumbers.get(i).toString(); 
+                    break;
+                }
+            }
         }
         setCurrentRevisionIndex(slider.getValue());
+        
+        // Try harder to keep the currently shown line the same.
+        if (lineNumberToPreserve != null) {
+            // If we moved left, then scroll to lineNumberToPreserve on the right file.
+            List lineNumbers = revisionDelta == -1 ? currentDiff.getRightLineNumbers() : currentDiff.getLeftLineNumbers();
+            final int position = lineNumbers.indexOf(lineNumberToPreserve);
+            if (position > -1) { // Should always be the case.
+                Closure scrollToLine = new Closure() {
+                    public void execute() throws Exception {
+                        scrollToLine(position);
+                    }
+                };
+                if (verticalScrollBarLocks == 0) {
+                    scrollToLine.execute();
+                } else {
+                    onUnfreezeVerticalScrollBars = scrollToLine;
+                }
+            }
+        }
     }
 
     /**
@@ -338,6 +381,8 @@ public class ApplicationWindow extends JFrame {
         updateMetadataTextArea(leftMetadataTextArea, (Revision) revisions.get(n - 1));
         updateMetadataTextArea(rightMetadataTextArea, (Revision) revisions.get(n));
         searchPanel.setCurrentDiff(diff);
+        currentRevisionIndex = n;
+        currentDiff = diff;
     }
 
     /**
@@ -412,6 +457,10 @@ public class ApplicationWindow extends JFrame {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     verticalScrollBarLocks--;
+                    if (verticalScrollBarLocks == 0 && onUnfreezeVerticalScrollBars != null) {
+                        MiscHelper.handleExceptions(onUnfreezeVerticalScrollBars);
+                        onUnfreezeVerticalScrollBars = null;
+                    }
                 }
             });
         }
