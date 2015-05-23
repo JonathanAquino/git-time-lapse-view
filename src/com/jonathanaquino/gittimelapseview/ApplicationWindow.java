@@ -438,7 +438,7 @@ public class ApplicationWindow extends JFrame {
     }
 
     /**
-     * Updates the positions of the scrollbars for the editor panes.
+     * Keeps the scrollbars in sync for the left and right editor panes.
      */
     private void updateScrollBars() throws Exception {
         JScrollBar leftVerticalScrollBar = ((JScrollPane) leftEditorPane.getParent().getParent()).getVerticalScrollBar();
