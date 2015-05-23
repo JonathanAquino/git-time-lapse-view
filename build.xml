@@ -80,6 +80,14 @@
         </jar>
     </target>
 
+    <target name="run" depends="jar" description="Run the app.">
+       <java classname="com.jonathanaquino.gittimelapseview.Application" fork="true">
+         <classpath>
+           <pathelement location="${dist.dir}/${projectName}.jar"/>
+         </classpath>
+       </java>
+    </target>
+
     <target name="clean" description="clean up">
         <delete dir="${build.dir}" />
         <delete dir="${dist.dir}" />
