@@ -14,11 +14,15 @@ Git Time-Lapse View runs on Windows, Mac, Linux, and any platform that runs Java
 
 ![Screenshot 2](http://farm3.static.flickr.com/2017/1608790277_75f459f76e.jpg)
 
-# Usage
+
+## Installation
 
 Download the program from the [Releases](https://github.com/JonathanAquino/git-time-lapse-view/releases)
 page. Then double-click GitTimeLapseView.jar or type java -jar git-time-lapse-view.jar
 at a command prompt. The Git Time-Lapse View window will appear.
+
+
+## Usage
 
 Now let's examine all of the revisions of one of your files. In the "File
 Path/URL" field, enter the path to the file in your Git repository, like
@@ -47,7 +51,7 @@ the window.
 You can also use the Browse Directories button ("...") to choose a file.
 
 
-# Build Instructions
+## Build Instructions
 
 1. Open your favorite Java IDE.
 2. Add src and test as source paths.
@@ -55,7 +59,7 @@ You can also use the Browse Directories button ("...") to choose a file.
 4. Run com.jonathanaquino.gittimelapseview.Application.
 
 
-# Libraries
+## Libraries
 
 The author gratefully acknowledges the use of the following libraries.
 
@@ -68,7 +72,7 @@ The author gratefully acknowledges the use of the following libraries.
     - svn-time-lapse-view. The original. https://github.com/JonathanAquino/svn-time-lapse-view
 
 
-# Contact
+## Contact
 
 Jonathan Aquino  -  jonathan.aquino@gmail.com  -  http://jonathanaquino.com
 Kim Tiedemann  -  http://www.tiede.dk:8080/roller/kim/
