@@ -75,7 +75,15 @@
         <delete dir="${dist.dir}" />
     </target>
 
+    <target name="zip" depends="jar" description="Create final zip file">
+        <zip destfile="${dist.dir}/${projectName}.zip">
+            <fileset dir="." includes="README.md"/>
+            <fileset dir="." includes="gpl-2.0.txt"/>
+            <fileset dir="dist" includes="${projectName}.jar"/>
+        </zip>
+    </target>
+
     <!-- Default, run this -->
-    <target name="main" depends="clean, compile, junit, jar" />
+    <target name="main" depends="clean, compile, junit, jar, zip" />
 
 </project>
