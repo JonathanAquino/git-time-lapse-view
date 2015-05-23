@@ -16,18 +16,17 @@ Git Time-Lapse View runs on Windows, Mac, Linux, and any platform that runs Java
 
 # Usage
 
-To start the program, simply double-click GitTimeLapseView.jar or type java -jar
-GitTimeLapseView.jar at a command prompt. The Git Time-Lapse View window will
-appear.
+Download the program from the [Releases](https://github.com/JonathanAquino/git-time-lapse-view/releases)
+page. Then double-click GitTimeLapseView.jar or type java -jar git-time-lapse-view.jar
+at a command prompt. The Git Time-Lapse View window will appear.
 
 Now let's examine all of the revisions of one of your files. In the "File
 Path/URL" field, enter the path to the file in your Git repository, like
 
     C:\svn\myproject\trunk\myfile.php
 
-If necessary, enter your username and password in the next two fields. The last
-field lets you limit the number of revisions to download (default 100). Finally,
-hit the Load button. You'll see a progress bar as the revisions are downloaded.
+There is also a field that lets you limit the number of revisions to download.
+Finally, hit the Load button. You'll see a progress bar as the revisions are downloaded.
 
 Now comes the fun part. You can drag the slider at the top to scroll through all
 of the revisions of the file. Changes between each revision are highlighted in
@@ -45,10 +44,7 @@ You might find it more convenient to view only the differences instead of the
 entire file. Try selecting the Show Differences Only checkbox at the bottom of
 the window.
 
-To use the Browse Directories/Repository button ("..."), first enter a file path
-or repository URL into the File Path/URL field. Fill in the User and Password
-fields if necessary. Then press the "..." button. A file dialog or
-repository-browser dialog will appear, allowing you to choose a file.
+You can also use the Browse Directories button ("...") to choose a file.
 
 
 # Build Instructions
@@ -57,22 +53,6 @@ repository-browser dialog will appear, allowing you to choose a file.
 2. Add src and test as source paths.
 3. Add the jars in lib and lib/test.
 4. Run com.jonathanaquino.gittimelapseview.Application.
-
-
-# License
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
-Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
 # Libraries
