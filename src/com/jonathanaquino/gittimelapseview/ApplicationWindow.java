@@ -339,6 +339,11 @@ public class ApplicationWindow extends JFrame {
             int position = (int)Math.round(((float)leftViewport.getViewPosition().y / leftViewport.getViewSize().height) * currentDiff.getLeftLineNumbers().size());
             List lineNumbers = revisionDelta == -1 ? currentDiff.getLeftLineNumbers() : currentDiff.getRightLineNumbers();
             for (int i = position; i >= 0; i--) {
+                if (i >= lineNumbers.size()) {
+                    // I saw an ArrayIndexOutOfBoundsException and I suspect it was here.
+                    // Adding this check just in case.
+                    continue;
+                }
                 if (lineNumbers.get(i).toString().length() > 0) {
                     lineNumberToPreserve = lineNumbers.get(i).toString(); 
                     break;
