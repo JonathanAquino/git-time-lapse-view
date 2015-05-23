@@ -73,7 +73,7 @@ public class DiffHelper {
             leftHtml.add(htmlPair[0]);
             rightHtml.add(htmlPair[1]);
         }        
-        return new Diff("<pre>" + StringUtils.join(leftHtml, "\n") + "</pre>", "<pre>" + StringUtils.join(rightHtml, "\n") + "</pre>", StringUtils.join(leftFormattedText, "\n"), StringUtils.join(rightFormattedText, "\n"), differencePositions(differenceFlags));
+        return new Diff("<pre>" + StringUtils.join(leftHtml, "\n") + "</pre>", "<pre>" + StringUtils.join(rightHtml, "\n") + "</pre>", StringUtils.join(leftFormattedText, "\n"), StringUtils.join(rightFormattedText, "\n"), leftLineNumbers, rightLineNumbers, differencePositions(differenceFlags));
     }
 
     /**
